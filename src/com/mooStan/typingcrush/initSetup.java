@@ -2,6 +2,8 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,6 +30,11 @@ public class initSetup {
 	public int screenHeight = 0;
 	public boolean smallScreen = false;
 	public int sdk = 0;
+	
+	public RelativeLayout slashScreen;
+	public RelativeLayout mainMenu;
+	
+	Timer WFT = new Timer();
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -67,34 +74,81 @@ public class initSetup {
 	    StrictMode.setThreadPolicy(policy);
 		//----------detect device setting and adapt environment
 	 
+	    slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
+		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
+	    
 	    uiSetup();
+	}
+
+	private void uiSetup(){
+		setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
+		
+		setWFT_bgSound();
 	}
 	
 	@SuppressLint("NewApi")
-	public void uiSetup(){
+	private void setStageBackground(RelativeLayout thisStage, String fileName){
 		double setNewHeight = screenHeight;
 		double setNewWidth = screenWidth;
 		
-		RelativeLayout slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
-		
 		try 
 		{
-			InputStream ims = myActivity.getAssets().open("backgrounds/slashScreen.jpg");
+			InputStream ims = myActivity.getAssets().open(fileName);
 		    Drawable d = Drawable.createFromStream(ims, null);
-
+		    
 		    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-		    	slashScreen.setBackgroundDrawable(d);
+		    	thisStage.setBackgroundDrawable(d);
 		    } else {
-		    	slashScreen.setBackground(d);
+		    	thisStage.setBackground(d);
 		    }
+		    
+		    ims = null;
+		    d = null;
+
 		}
 		catch(IOException ex) 
 		{
 		    return;
 		}
 		
-		soundsController.playBgMusic("sounds/splashScreen_sound.mp3",false);
-		serverComm.checkInternetConnection();
 	}
+	
+	private void setWFT_bgSound() {
+        WFT.schedule(new TimerTask() {          
+            @Override
+            public void run() {
+                WFTTimerMethod_bgSound();
+            }
+        }, 500); // 4 seconds delay
+    }
+    private void WFTTimerMethod_bgSound() {
+    	myActivity.runOnUiThread(play_bgSound);
+    }
+    private Runnable play_bgSound = new Runnable() {
+        public void run() {
+        	soundsController.playBgMusic("sounds/splashScreen_sound.mp3",false);
+        	setWFT_remove_splashScreen();
+        }
+    };
+    
+    private void setWFT_remove_splashScreen() {
+        WFT.schedule(new TimerTask() {          
+            @Override
+            public void run() {
+                WFTTimerMethod_remove_splashScreen();
+            }
+        }, 2000); // 4 seconds delay
+    }
+    private void WFTTimerMethod_remove_splashScreen() {
+    	myActivity.runOnUiThread(remove_splashScreen);
+    }
+    private Runnable remove_splashScreen = new Runnable() {
+        public void run() {
+        	myActivity.setContentView(R.layout.main_menu);
+        	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+        	
+        	serverComm.checkInternetConnection();
+        }
+    };
 	
 }
