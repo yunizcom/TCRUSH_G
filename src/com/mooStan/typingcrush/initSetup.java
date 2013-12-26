@@ -8,13 +8,20 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
 import com.mooStan.typingcrush.soundsController;
 
@@ -33,6 +40,10 @@ public class initSetup {
 	
 	public RelativeLayout slashScreen;
 	public RelativeLayout mainMenu;
+	
+	public ImageView fb_fanpage_btn;
+	public ImageView trophy_btn;
+	public ImageView ic_play_btn;
 	
 	Timer WFT = new Timer();
 
@@ -76,14 +87,25 @@ public class initSetup {
 	 
 	    slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
+		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
+		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
+		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
 	    
 	    uiSetup();
 	}
 
 	private void uiSetup(){
+		stageController(slashScreen);
 		setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
 		
 		setWFT_bgSound();
+	}
+	
+	private void stageController(RelativeLayout thisStage){
+		slashScreen.setVisibility(View.INVISIBLE);
+		mainMenu.setVisibility(View.INVISIBLE);
+		
+		thisStage.setVisibility(View.VISIBLE);
 	}
 	
 	@SuppressLint("NewApi")
@@ -144,11 +166,88 @@ public class initSetup {
     }
     private Runnable remove_splashScreen = new Runnable() {
         public void run() {
-        	myActivity.setContentView(R.layout.main_menu);
+        	stageController(mainMenu);
         	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
         	
         	serverComm.checkInternetConnection();
+        	
+        	setEffectListeners();
         }
     };
 	
+    private void setEffectListeners(){
+	    fb_fanpage_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	fb_fanpage_btn.setAlpha(180);
+		            	
+		            	Uri uri = Uri.parse("https://www.facebook.com/typingcrush");
+			       		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			       		myActivity.startActivity(intent);
+			       		 
+		                break;
+		            }
+		            case MotionEvent.ACTION_CANCEL:{
+		            	fb_fanpage_btn.setAlpha(255);
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	fb_fanpage_btn.setAlpha(255);
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    trophy_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	trophy_btn.setAlpha(180);
+
+		                break;
+		            }
+		            case MotionEvent.ACTION_CANCEL:{
+		            	trophy_btn.setAlpha(255);
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	trophy_btn.setAlpha(255);
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_play_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_play_btn.setAlpha(180);
+
+		                break;
+		            }
+		            case MotionEvent.ACTION_CANCEL:{
+		            	ic_play_btn.setAlpha(255);
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_play_btn.setAlpha(255);
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+    }
+
 }

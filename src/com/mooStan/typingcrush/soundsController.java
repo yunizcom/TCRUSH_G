@@ -12,17 +12,50 @@ public class soundsController {
 	private Context myContext;
 	private Activity myActivity;
 	
-	MediaPlayer splashScreenMusic = new MediaPlayer();
+	MediaPlayer bgMusic = new MediaPlayer();
+	MediaPlayer shortMusic = new MediaPlayer();
 	
 	soundsController(Context context, Activity myActivityReference) {
 		myContext = context;
 		myActivity = myActivityReference;
 	}
 	
+	//-----------app activity life cycle handling---------------
+	public void destroyBgMusic(){
+		 bgMusic.stop();
+		 bgMusic.release();
+		 
+		 shortMusic.stop();
+		 shortMusic.release();
+	}
+	
+	public void pauseBgMusic(){
+		if(bgMusic.isPlaying()){
+			bgMusic.pause();
+		}
+	}
+	
+	public void resumeBgMusic(){
+		try {
+			bgMusic.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(!bgMusic.isPlaying()){
+			bgMusic.start();
+		}
+	}
+	//-----------app activity life cycle handling---------------
+	
 	public void playBgMusic(String filename, boolean looping){
-		splashScreenMusic.reset();
-		splashScreenMusic.release();
-		splashScreenMusic = null;
+		bgMusic.reset();
+		bgMusic.release();
+		bgMusic = null;
     	
 		AssetFileDescriptor descriptor = null;
 		try {
@@ -34,9 +67,9 @@ public class soundsController {
 		long start = descriptor.getStartOffset();
 		long end = descriptor.getLength();
 		
-		splashScreenMusic = new MediaPlayer();
+		bgMusic = new MediaPlayer();
 		try {
-			splashScreenMusic.setDataSource(descriptor.getFileDescriptor(), start, end);
+			bgMusic.setDataSource(descriptor.getFileDescriptor(), start, end);
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,7 +89,7 @@ public class soundsController {
 		}
 		
 		try {
-			splashScreenMusic.prepare();
+			bgMusic.prepare();
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,10 +98,58 @@ public class soundsController {
 			e.printStackTrace();
 		}
 		
-		splashScreenMusic.setVolume(1.0f,1.0f);
+		bgMusic.setVolume(1.0f,1.0f);
 		
-		splashScreenMusic.setLooping(looping);
-		splashScreenMusic.start();
+		bgMusic.setLooping(looping);
+		bgMusic.start();
+	}
+	
+	public void shortSoundClip(String filename){
+		shortMusic.reset();
+		shortMusic.release();
+		shortMusic = null;
+    	
+		AssetFileDescriptor descriptor = null;
+		try {
+			descriptor = myActivity.getAssets().openFd(filename);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		long start = descriptor.getStartOffset();
+		long end = descriptor.getLength();
+		
+		shortMusic = new MediaPlayer();
+		try {
+			shortMusic.setDataSource(descriptor.getFileDescriptor(), start, end);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			descriptor.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			shortMusic.prepare();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		shortMusic.start();
 	}
 	
 }

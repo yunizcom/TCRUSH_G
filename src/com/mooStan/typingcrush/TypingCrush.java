@@ -1,25 +1,14 @@
 package com.mooStan.typingcrush;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.view.Display;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-
 import com.mooStan.typingcrush.initSetup;
-import com.mooStan.typingcrush.serverComm;
+import com.mooStan.typingcrush.soundsController;
 
 public class TypingCrush extends Activity {
 
 	public initSetup initSetup;
-	public serverComm serverComm;
+	public soundsController soundsController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +16,29 @@ public class TypingCrush extends Activity {
 		setContentView(R.layout.activity_typing_crush);
 
 		initSetup = new initSetup(this.getApplicationContext(),this);
-		serverComm = new serverComm(this.getApplicationContext());
+		soundsController = new soundsController(this.getApplicationContext(),this);
 		
 		initSetup.basicDetection();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		soundsController.destroyBgMusic();
+	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		soundsController.pauseBgMusic();
+	}
+	
+	protected void onResume() {
+		super.onResume();
+		
+		soundsController.resumeBgMusic();
+	}
 	
 }

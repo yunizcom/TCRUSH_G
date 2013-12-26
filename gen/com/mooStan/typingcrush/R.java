@@ -21,16 +21,21 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int ic_fb_like_btn=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int ic_play_btn=0x7f020002;
+        public static final int ic_trophy_btn=0x7f020003;
     }
     public static final class id {
-        public static final int action_settings=0x7f080002;
+        public static final int action_settings=0x7f080005;
+        public static final int fb_fanpage_btn=0x7f080002;
+        public static final int ic_play_btn=0x7f080004;
         public static final int mainMenu=0x7f080001;
         public static final int slashScreen=0x7f080000;
+        public static final int trophy_btn=0x7f080003;
     }
     public static final class layout {
         public static final int activity_typing_crush=0x7f030000;
-        public static final int main_menu=0x7f030001;
     }
     public static final class menu {
         public static final int typing_crush=0x7f070000;

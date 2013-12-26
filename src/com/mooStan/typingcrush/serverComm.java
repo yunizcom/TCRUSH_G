@@ -17,7 +17,7 @@ public class serverComm {
 	
 	public void checkInternetConnection(){
 		if(!isNetworkAvailable()){
-			Toast.makeText(myContext.getApplicationContext(), "You need a smooth internet connection to submit your game score." , Toast.LENGTH_LONG).show();
+			Toast.makeText(myContext.getApplicationContext(), "You need a smooth internet connection to play this game." , Toast.LENGTH_LONG).show();
 		}
 	}
 	
