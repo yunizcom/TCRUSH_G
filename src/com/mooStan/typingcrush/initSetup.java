@@ -5,10 +5,14 @@ import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -27,25 +31,30 @@ import com.mooStan.typingcrush.soundsController;
 
 public class initSetup {
 	
+	public static final String PREFS_SETTINGS = "YunizSaved";
+	
+	private int curentStage = 0;
+	
 	public serverComm serverComm;
 	public soundsController soundsController;
 
 	private Context myContext;
 	private Activity myActivity;
 	
-	public int screenWidth = 0;
-	public int screenHeight = 0;
-	public boolean smallScreen = false;
-	public int sdk = 0;
+	private int screenWidth = 0;
+	private int screenHeight = 0;
+	private boolean smallScreen = false;
+	private int sdk = 0;
 	
-	public RelativeLayout slashScreen;
-	public RelativeLayout mainMenu;
+	private RelativeLayout slashScreen;
+	private RelativeLayout mainMenu;
+	private RelativeLayout sub_menu;
 	
-	public ImageView fb_fanpage_btn;
-	public ImageView trophy_btn;
-	public ImageView ic_play_btn;
+	private ImageView fb_fanpage_btn;
+	private ImageView trophy_btn;
+	private ImageView ic_play_btn;
 	
-	Timer WFT = new Timer();
+	private Timer WFT = new Timer();
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -87,6 +96,7 @@ public class initSetup {
 	 
 	    slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
+		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
 		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
@@ -97,6 +107,7 @@ public class initSetup {
 	private void uiSetup(){
 		stageController(slashScreen);
 		setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
+		curentStage = 0;
 		
 		setWFT_bgSound();
 	}
@@ -104,8 +115,16 @@ public class initSetup {
 	private void stageController(RelativeLayout thisStage){
 		slashScreen.setVisibility(View.INVISIBLE);
 		mainMenu.setVisibility(View.INVISIBLE);
+		sub_menu.setVisibility(View.INVISIBLE);
+		
+		slashScreen.setClickable(false);
+		mainMenu.setClickable(false);
+		sub_menu.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
+		thisStage.setClickable(false);
+		
+		System.gc();
 	}
 	
 	@SuppressLint("NewApi")
@@ -168,6 +187,7 @@ public class initSetup {
         public void run() {
         	stageController(mainMenu);
         	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+        	curentStage++;
         	
         	serverComm.checkInternetConnection();
         	
@@ -234,6 +254,10 @@ public class initSetup {
 		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 		            	ic_play_btn.setAlpha(180);
 
+		            	stageController(sub_menu);
+		            	setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+		            	curentStage++;
+		            	
 		                break;
 		            }
 		            case MotionEvent.ACTION_CANCEL:{
@@ -250,4 +274,60 @@ public class initSetup {
 	    });
     }
 
+    public void saveYunizSaved(int level, int bombs, String playername, int shares){ // usage : saveYunizSaved(10, 2, "Stanly", 1);
+		  SharedPreferences settings = myActivity.getSharedPreferences(PREFS_SETTINGS, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putInt("YunizCurLevel", level);
+	      editor.putInt("YunizCurBombs", bombs);
+	      editor.putString("YunizPlayerName", playername);
+	      editor.putInt("YunizShared", shares);
+
+	      editor.commit();
+	}
+	
+	public JSONObject retriveScoreValue() throws JSONException{ // usage : retriveScoreValue().getString("YunizCurLevel") + " | " + retriveScoreValue().getString("YunizCurBombs") + " | " + retriveScoreValue().getString("YunizPlayerName") + " | " + retriveScoreValue().getString("YunizShared")
+		String returnString = "";
+		SharedPreferences settings = myActivity.getSharedPreferences(PREFS_SETTINGS, 0);
+		returnString = "{'YunizCurLevel' : " + settings.getInt("YunizCurLevel", 0) + ",'YunizCurBombs' : " + settings.getInt("YunizCurBombs", 0) + ",'YunizPlayerName' : " + settings.getString("YunizPlayerName", "New Player") + ",'YunizShared' : " + settings.getInt("YunizShared", 0) + "}";
+		
+		JSONObject json = null;
+		try {
+			json = new JSONObject(returnString);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+    
+	public void handleNativeBackAction(){
+		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		
+		curentStage--;
+	
+		switch(curentStage){
+			case 1 : {
+				
+				stageController(mainMenu);
+            	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+				
+				break;
+			}
+			case 2 : {
+				
+				stageController(sub_menu);
+            	setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+				
+				break;
+			}
+			case 0 : {
+				
+				myActivity.finish();
+				
+				break;
+			}
+		}
+	}
+	
 }

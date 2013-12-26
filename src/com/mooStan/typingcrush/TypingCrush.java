@@ -1,6 +1,7 @@
 package com.mooStan.typingcrush;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.app.Activity;
 import com.mooStan.typingcrush.initSetup;
 import com.mooStan.typingcrush.soundsController;
@@ -21,6 +22,12 @@ public class TypingCrush extends Activity {
 		initSetup.basicDetection();
 	}
 
+	@Override
+    public void onBackPressed()
+    {
+		initSetup.handleNativeBackAction();
+    }
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
