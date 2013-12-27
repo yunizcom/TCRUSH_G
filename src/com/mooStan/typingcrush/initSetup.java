@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
 import com.mooStan.typingcrush.soundsController;
+import com.mooStan.typingcrush.objectsController;
 
 public class initSetup {
 	
@@ -37,6 +38,7 @@ public class initSetup {
 	
 	public serverComm serverComm;
 	public soundsController soundsController;
+	public objectsController objectsController;
 
 	private Context myContext;
 	private Activity myActivity;
@@ -53,8 +55,7 @@ public class initSetup {
 	private ImageView fb_fanpage_btn;
 	private ImageView trophy_btn;
 	private ImageView ic_play_btn;
-	
-	private Timer WFT = new Timer();
+	private ImageView ic_continue_btn;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -62,6 +63,7 @@ public class initSetup {
 		
 		serverComm = new serverComm(myContext);
 		soundsController = new soundsController(myContext,myActivity);
+		objectsController = new objectsController(myContext,myActivity);
 	}
 	
 	@SuppressLint("NewApi")
@@ -100,6 +102,7 @@ public class initSetup {
 		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
 		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
+		ic_continue_btn = (ImageView) myActivity.findViewById(R.id.ic_continue_btn);
 	    
 	    uiSetup();
 	}
@@ -109,7 +112,25 @@ public class initSetup {
 		setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
 		curentStage = 0;
 		
-		setWFT_bgSound();
+		slashScreen.postDelayed(new Runnable() {
+	        @Override
+	        public void run() {
+	        	soundsController.playBgMusic("sounds/splashScreen_sound.mp3",false);
+	        	slashScreen.postDelayed(new Runnable() {
+	    	        @Override
+	    	        public void run() {
+	    	        	stageController(mainMenu);
+	    	        	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+	    	        	curentStage++;
+	    	        	
+	    	        	serverComm.checkInternetConnection();
+	    	        	
+	    	        	setEffectListeners();
+	    	        }
+	    	    }, 2000);
+	        }
+	    }, 500);
+		
 	}
 	
 	private void stageController(RelativeLayout thisStage){
@@ -153,48 +174,7 @@ public class initSetup {
 		}
 		
 	}
-	
-	private void setWFT_bgSound() {
-        WFT.schedule(new TimerTask() {          
-            @Override
-            public void run() {
-                WFTTimerMethod_bgSound();
-            }
-        }, 500); // 4 seconds delay
-    }
-    private void WFTTimerMethod_bgSound() {
-    	myActivity.runOnUiThread(play_bgSound);
-    }
-    private Runnable play_bgSound = new Runnable() {
-        public void run() {
-        	soundsController.playBgMusic("sounds/splashScreen_sound.mp3",false);
-        	setWFT_remove_splashScreen();
-        }
-    };
-    
-    private void setWFT_remove_splashScreen() {
-        WFT.schedule(new TimerTask() {          
-            @Override
-            public void run() {
-                WFTTimerMethod_remove_splashScreen();
-            }
-        }, 2000); // 4 seconds delay
-    }
-    private void WFTTimerMethod_remove_splashScreen() {
-    	myActivity.runOnUiThread(remove_splashScreen);
-    }
-    private Runnable remove_splashScreen = new Runnable() {
-        public void run() {
-        	stageController(mainMenu);
-        	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
-        	curentStage++;
-        	
-        	serverComm.checkInternetConnection();
-        	
-        	setEffectListeners();
-        }
-    };
-	
+
     private void setEffectListeners(){
 	    fb_fanpage_btn.setOnTouchListener(new View.OnTouchListener() {
 	        @Override
@@ -257,6 +237,16 @@ public class initSetup {
 		            	stageController(sub_menu);
 		            	setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
 		            	curentStage++;
+
+		            	try {
+		            		objectsController.createLevelOptions(Integer.valueOf(retriveScoreValue().getString("YunizCurLevel")));
+						} catch (NumberFormatException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 		            	
 		                break;
 		            }
@@ -266,6 +256,29 @@ public class initSetup {
 		            }
 		            case MotionEvent.ACTION_UP:{
 		            	ic_play_btn.setAlpha(255);
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_continue_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_continue_btn.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_CANCEL:{
+		            	ic_continue_btn.setAlpha(255);
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_continue_btn.setAlpha(255);
 		                break;
 		            }
 	            }
@@ -288,15 +301,9 @@ public class initSetup {
 	public JSONObject retriveScoreValue() throws JSONException{ // usage : retriveScoreValue().getString("YunizCurLevel") + " | " + retriveScoreValue().getString("YunizCurBombs") + " | " + retriveScoreValue().getString("YunizPlayerName") + " | " + retriveScoreValue().getString("YunizShared")
 		String returnString = "";
 		SharedPreferences settings = myActivity.getSharedPreferences(PREFS_SETTINGS, 0);
-		returnString = "{'YunizCurLevel' : " + settings.getInt("YunizCurLevel", 0) + ",'YunizCurBombs' : " + settings.getInt("YunizCurBombs", 0) + ",'YunizPlayerName' : " + settings.getString("YunizPlayerName", "New Player") + ",'YunizShared' : " + settings.getInt("YunizShared", 0) + "}";
+		returnString = "{'YunizCurLevel' : " + settings.getInt("YunizCurLevel", 0) + ",'YunizCurBombs' : " + settings.getInt("YunizCurBombs", 0) + ",'YunizPlayerName' : '" + settings.getString("YunizPlayerName", "New Player") + "','YunizShared' : " + settings.getInt("YunizShared", 0) + "}";
 		
-		JSONObject json = null;
-		try {
-			json = new JSONObject(returnString);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		JSONObject json = new JSONObject(returnString);
 
 		return json;
 	}

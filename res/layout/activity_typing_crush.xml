@@ -65,6 +65,41 @@
 	    android:paddingTop="@dimen/activity_vertical_margin"
 
 	    android:id="@+id/sub_menu" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ic_continue_btn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:padding="16dp"
+            android:orientation="vertical" >
+	
+	        <ScrollView
+	            android:id="@+id/scrollList"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content" >
+	
+	            <LinearLayout
+	                android:id="@+id/level_list"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:orientation="vertical" >
+	            </LinearLayout>
+	        </ScrollView>
+	    </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/ic_continue_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_continue_btn" />
 	
 	</RelativeLayout>
     
