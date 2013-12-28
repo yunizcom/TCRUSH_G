@@ -2,6 +2,7 @@ package com.mooStan.typingcrush;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.app.Activity;
 import com.mooStan.typingcrush.initSetup;
 import com.mooStan.typingcrush.soundsController;
@@ -11,6 +12,8 @@ public class TypingCrush extends Activity {
 	public initSetup initSetup;
 	public soundsController soundsController;
 
+	private GlobalVars globalVariable;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,9 +22,20 @@ public class TypingCrush extends Activity {
 		initSetup = new initSetup(this.getApplicationContext(),this);
 		soundsController = new soundsController(this.getApplicationContext(),this);
 		
+		globalVariable = (GlobalVars) getApplicationContext();
+		
 		initSetup.basicDetection();
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		// TODO Auto-generated method stub
+		super.onWindowFocusChanged(hasFocus);
+		
+		ImageView ic_time_bar = (ImageView) findViewById(R.id.ic_time_bar);
+		globalVariable.gameStage_TimeBar_Width = ic_time_bar.getWidth();
+	}
+	
 	@Override
     public void onBackPressed()
     {

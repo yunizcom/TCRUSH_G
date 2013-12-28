@@ -13,7 +13,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.StrictMode;
@@ -23,24 +25,26 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
 import com.mooStan.typingcrush.soundsController;
 import com.mooStan.typingcrush.objectsController;
 import com.mooStan.typingcrush.popupBox;
+import com.mooStan.typingcrush.gameEngine;
 
 public class initSetup {
 	
-	public static final String PREFS_SETTINGS = "YunizSaved";
 	
-	private int curentStage = 0;
-	
+
 	public serverComm serverComm;
 	public soundsController soundsController;
 	public objectsController objectsController;
 	public popupBox popupBox;
+	public gameEngine gameEngine;
 	
 	private GlobalVars globalVariable;
 
@@ -50,18 +54,22 @@ public class initSetup {
 	private int screenWidth = 0, screenHeight = 0, sdk = 0;
 	private boolean smallScreen = false;
 	
-	private RelativeLayout slashScreen, mainMenu, sub_menu;
+	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
+	private LinearLayout keypadBg;
 	
 	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn;
+	
+	private TextView stageLevelShow,stageTimeShow;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
 		myActivity = myActivityReference;
 		
-		serverComm = new serverComm(myContext);
+		serverComm = new serverComm(myContext,myActivity);
 		soundsController = new soundsController(myContext,myActivity);
 		objectsController = new objectsController(myContext,myActivity);
 		popupBox = new popupBox(myContext,myActivity);
+		gameEngine = new gameEngine(myContext,myActivity);
 		
 		globalVariable = (GlobalVars) myActivity.getApplicationContext();
 	}
@@ -99,10 +107,17 @@ public class initSetup {
 	    slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
+		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
+		
+		keypadBg = (LinearLayout) myActivity.findViewById(R.id.keypadBg);
+		
 		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
 		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
 		ic_continue_btn = (ImageView) myActivity.findViewById(R.id.ic_continue_btn);
+		
+		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
+		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
 	    
 		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
 		
@@ -112,7 +127,17 @@ public class initSetup {
 	private void uiSetup(){
 		stageController(slashScreen);
 		objectsController.setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
-		curentStage = 0;
+		objectsController.setStageBackground_linear(keypadBg,"backgrounds/keypad_bg.png");
+		globalVariable.curentStage = 0;
+		
+		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
+		stageLevelShow.setTextSize(20f);
+		stageLevelShow.setTypeface(tf);
+		stageLevelShow.setTextColor(Color.parseColor("#ff7979"));
+		
+		stageTimeShow.setTextSize(20f);
+		stageTimeShow.setTypeface(tf);
+		stageTimeShow.setTextColor(Color.parseColor("#ff7979"));
 		
 		slashScreen.postDelayed(new Runnable() {
 	        @Override
@@ -123,7 +148,7 @@ public class initSetup {
 	    	        public void run() {
 	    	        	stageController(mainMenu);
 	    	        	objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
-	    	        	curentStage++;
+	    	        	globalVariable.curentStage++;
 	    	        	
 	    	        	serverComm.checkInternetConnection();
 	    	        	
@@ -139,10 +164,12 @@ public class initSetup {
 		slashScreen.setVisibility(View.INVISIBLE);
 		mainMenu.setVisibility(View.INVISIBLE);
 		sub_menu.setVisibility(View.INVISIBLE);
+		gameStage.setVisibility(View.INVISIBLE);
 		
 		slashScreen.setClickable(false);
 		mainMenu.setClickable(false);
 		sub_menu.setClickable(false);
+		gameStage.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
 		thisStage.setClickable(true);
@@ -210,10 +237,10 @@ public class initSetup {
 		            	
 		            	stageController(sub_menu);
 		            	objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
-		            	curentStage++;
+		            	globalVariable.curentStage++;
 
 		            	try {
-		            		objectsController.createLevelOptions(Integer.valueOf(retriveScoreValue().getString("YunizCurLevel")));
+		            		objectsController.createLevelOptions(Integer.valueOf(globalVariable.retriveScoreValue().getString("YunizCurLevel")));
 						} catch (NumberFormatException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -242,6 +269,18 @@ public class initSetup {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_continue_btn.setAlpha(255);
 		            	
+		            	try {
+							gameEngine.startGameEngine((Integer.valueOf(globalVariable.retriveScoreValue().getString("YunizCurLevel")) + 1),sdk);
+						} catch (NumberFormatException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		            	
+		            	globalVariable.curentStage++;
+		            	
 		                break;
 		            }
 	            }
@@ -250,34 +289,15 @@ public class initSetup {
 	    });
     }
 
-    public void saveYunizSaved(int level, int bombs, String playername, int shares){ // usage : saveYunizSaved(10, 2, "Stanly", 1);
-		  SharedPreferences settings = myActivity.getSharedPreferences(PREFS_SETTINGS, 0);
-	      SharedPreferences.Editor editor = settings.edit();
-	      editor.putInt("YunizCurLevel", level);
-	      editor.putInt("YunizCurBombs", bombs);
-	      editor.putString("YunizPlayerName", playername);
-	      editor.putInt("YunizShared", shares);
-
-	      editor.commit();
-	}
-	
-	public JSONObject retriveScoreValue() throws JSONException{ // usage : retriveScoreValue().getString("YunizCurLevel") + " | " + retriveScoreValue().getString("YunizCurBombs") + " | " + retriveScoreValue().getString("YunizPlayerName") + " | " + retriveScoreValue().getString("YunizShared")
-		String returnString = "";
-		SharedPreferences settings = myActivity.getSharedPreferences(PREFS_SETTINGS, 0);
-		returnString = "{'YunizCurLevel' : " + settings.getInt("YunizCurLevel", 0) + ",'YunizCurBombs' : " + settings.getInt("YunizCurBombs", 0) + ",'YunizPlayerName' : '" + settings.getString("YunizPlayerName", "New Player") + "','YunizShared' : " + settings.getInt("YunizShared", 0) + "}";
-		
-		JSONObject json = new JSONObject(returnString);
-
-		return json;
-	}
+    
     
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 		
 		if(globalVariable.isPopUpOpen == false){
-			curentStage--;
+			globalVariable.curentStage--;
 		
-			switch(curentStage){
+			switch(globalVariable.curentStage){
 				case 1 : {
 					
 					stageController(mainMenu);
@@ -287,6 +307,7 @@ public class initSetup {
 				}
 				case 2 : {
 					
+					gameEngine.stopGameStage();
 					stageController(sub_menu);
 					objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
 					

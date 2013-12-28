@@ -1,21 +1,28 @@
 package com.mooStan.typingcrush;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
+import com.mooStan.typingcrush.popupBox;
 
 public class serverComm {
 
 	private Context myContext;
+	private Activity myActivity;
+	
+	public popupBox popupBox;
 
-	serverComm(Context context) {
+	serverComm(Context context, Activity myActivityReference) {
 		myContext = context;
+		myActivity = myActivityReference;
+		
+		popupBox = new popupBox(myContext,myActivity);
 	}
 	
 	public void checkInternetConnection(){
 		if(!isNetworkAvailable()){
-			Toast.makeText(myContext.getApplicationContext(), "You need a smooth internet connection to play this game." , Toast.LENGTH_LONG).show();
+			popupBox.showPopBox("You need a smooth internet connection to play this game.");
 		}
 	}
 	

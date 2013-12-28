@@ -49,7 +49,7 @@ public class popupBox {
 		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
 		popboxMSG.setTypeface(tf);
 		popboxMSG.setTextSize(20);
-		popboxMSG.setPadding(20, 20, 20, 20);
+		popboxMSG.setPadding(10, 0, 10, 20);
 		popboxMSG.setTextColor(Color.parseColor("#7a7a7a"));
 		
 		popboxOK_btn.setOnTouchListener(new View.OnTouchListener() {
@@ -67,7 +67,7 @@ public class popupBox {
 		            	
 		            	popbox.setVisibility(View.INVISIBLE);
 		            	popbox.setClickable(false);
-		            	globalVariable.setIsPopUpOpen(false);
+		            	globalVariable.isPopUpOpen = false;
 		            	
 		                break;
 		            }
@@ -80,7 +80,7 @@ public class popupBox {
 	public void closePopBox(){
 		popbox.setVisibility(View.INVISIBLE);
     	popbox.setClickable(false);
-    	globalVariable.setIsPopUpOpen(false);
+    	globalVariable.isPopUpOpen = false;
 	}
 	
 	public void showPopBox(String msg){
@@ -88,7 +88,7 @@ public class popupBox {
 		popboxMSG.setText(msg);
 		popbox.setClickable(true);
 		
-		globalVariable.setIsPopUpOpen(true);
+		globalVariable.isPopUpOpen = true;
 	}
 	
 	@SuppressLint("NewApi")
