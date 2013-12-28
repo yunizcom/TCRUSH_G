@@ -29,6 +29,7 @@ import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
 import com.mooStan.typingcrush.soundsController;
 import com.mooStan.typingcrush.objectsController;
+import com.mooStan.typingcrush.popupBox;
 
 public class initSetup {
 	
@@ -39,23 +40,19 @@ public class initSetup {
 	public serverComm serverComm;
 	public soundsController soundsController;
 	public objectsController objectsController;
+	public popupBox popupBox;
+	
+	private GlobalVars globalVariable;
 
 	private Context myContext;
 	private Activity myActivity;
 	
-	private int screenWidth = 0;
-	private int screenHeight = 0;
+	private int screenWidth = 0, screenHeight = 0, sdk = 0;
 	private boolean smallScreen = false;
-	private int sdk = 0;
 	
-	private RelativeLayout slashScreen;
-	private RelativeLayout mainMenu;
-	private RelativeLayout sub_menu;
+	private RelativeLayout slashScreen, mainMenu, sub_menu;
 	
-	private ImageView fb_fanpage_btn;
-	private ImageView trophy_btn;
-	private ImageView ic_play_btn;
-	private ImageView ic_continue_btn;
+	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -64,6 +61,9 @@ public class initSetup {
 		serverComm = new serverComm(myContext);
 		soundsController = new soundsController(myContext,myActivity);
 		objectsController = new objectsController(myContext,myActivity);
+		popupBox = new popupBox(myContext,myActivity);
+		
+		globalVariable = (GlobalVars) myActivity.getApplicationContext();
 	}
 	
 	@SuppressLint("NewApi")
@@ -104,12 +104,14 @@ public class initSetup {
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
 		ic_continue_btn = (ImageView) myActivity.findViewById(R.id.ic_continue_btn);
 	    
+		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
+		
 	    uiSetup();
 	}
 
 	private void uiSetup(){
 		stageController(slashScreen);
-		setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
+		objectsController.setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
 		curentStage = 0;
 		
 		slashScreen.postDelayed(new Runnable() {
@@ -120,7 +122,7 @@ public class initSetup {
 	    	        @Override
 	    	        public void run() {
 	    	        	stageController(mainMenu);
-	    	        	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+	    	        	objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
 	    	        	curentStage++;
 	    	        	
 	    	        	serverComm.checkInternetConnection();
@@ -143,36 +145,9 @@ public class initSetup {
 		sub_menu.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
-		thisStage.setClickable(false);
+		thisStage.setClickable(true);
 		
 		System.gc();
-	}
-	
-	@SuppressLint("NewApi")
-	private void setStageBackground(RelativeLayout thisStage, String fileName){
-		double setNewHeight = screenHeight;
-		double setNewWidth = screenWidth;
-		
-		try 
-		{
-			InputStream ims = myActivity.getAssets().open(fileName);
-		    Drawable d = Drawable.createFromStream(ims, null);
-		    
-		    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-		    	thisStage.setBackgroundDrawable(d);
-		    } else {
-		    	thisStage.setBackground(d);
-		    }
-		    
-		    ims = null;
-		    d = null;
-
-		}
-		catch(IOException ex) 
-		{
-		    return;
-		}
-		
 	}
 
     private void setEffectListeners(){
@@ -183,19 +158,16 @@ public class initSetup {
 		            case MotionEvent.ACTION_DOWN: {
 		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 		            	fb_fanpage_btn.setAlpha(180);
-		            	
-		            	Uri uri = Uri.parse("https://www.facebook.com/typingcrush");
-			       		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-			       		myActivity.startActivity(intent);
-			       		 
-		                break;
-		            }
-		            case MotionEvent.ACTION_CANCEL:{
-		            	fb_fanpage_btn.setAlpha(255);
+
 		                break;
 		            }
 		            case MotionEvent.ACTION_UP:{
 		            	fb_fanpage_btn.setAlpha(255);
+		            	
+		            	Uri uri = Uri.parse("https://www.facebook.com/typingcrush");
+			       		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			       		myActivity.startActivity(intent);
+		            	
 		                break;
 		            }
 	            }
@@ -213,12 +185,9 @@ public class initSetup {
 
 		                break;
 		            }
-		            case MotionEvent.ACTION_CANCEL:{
-		            	trophy_btn.setAlpha(255);
-		                break;
-		            }
 		            case MotionEvent.ACTION_UP:{
 		            	trophy_btn.setAlpha(255);
+		            	
 		                break;
 		            }
 	            }
@@ -234,8 +203,13 @@ public class initSetup {
 		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 		            	ic_play_btn.setAlpha(180);
 
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_play_btn.setAlpha(255);
+		            	
 		            	stageController(sub_menu);
-		            	setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+		            	objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
 		            	curentStage++;
 
 		            	try {
@@ -248,14 +222,6 @@ public class initSetup {
 							e.printStackTrace();
 						}
 		            	
-		                break;
-		            }
-		            case MotionEvent.ACTION_CANCEL:{
-		            	ic_play_btn.setAlpha(255);
-		                break;
-		            }
-		            case MotionEvent.ACTION_UP:{
-		            	ic_play_btn.setAlpha(255);
 		                break;
 		            }
 	            }
@@ -273,12 +239,9 @@ public class initSetup {
 		            	
 		                break;
 		            }
-		            case MotionEvent.ACTION_CANCEL:{
-		            	ic_continue_btn.setAlpha(255);
-		                break;
-		            }
 		            case MotionEvent.ACTION_UP:{
 		            	ic_continue_btn.setAlpha(255);
+		            	
 		                break;
 		            }
 	            }
@@ -311,29 +274,33 @@ public class initSetup {
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 		
-		curentStage--;
-	
-		switch(curentStage){
-			case 1 : {
-				
-				stageController(mainMenu);
-            	setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
-				
-				break;
+		if(globalVariable.isPopUpOpen == false){
+			curentStage--;
+		
+			switch(curentStage){
+				case 1 : {
+					
+					stageController(mainMenu);
+					objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+					
+					break;
+				}
+				case 2 : {
+					
+					stageController(sub_menu);
+					objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+					
+					break;
+				}
+				case 0 : {
+					
+					myActivity.finish();
+					
+					break;
+				}
 			}
-			case 2 : {
-				
-				stageController(sub_menu);
-            	setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
-				
-				break;
-			}
-			case 0 : {
-				
-				myActivity.finish();
-				
-				break;
-			}
+		}else{
+			popupBox.closePopBox();
 		}
 	}
 	

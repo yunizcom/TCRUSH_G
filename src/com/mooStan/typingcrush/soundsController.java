@@ -12,8 +12,7 @@ public class soundsController {
 	private Context myContext;
 	private Activity myActivity;
 	
-	MediaPlayer bgMusic = new MediaPlayer();
-	MediaPlayer shortMusic = new MediaPlayer();
+	MediaPlayer bgMusic = new MediaPlayer(), shortMusic = new MediaPlayer();
 	
 	soundsController(Context context, Activity myActivityReference) {
 		myContext = context;
