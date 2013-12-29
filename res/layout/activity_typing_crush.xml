@@ -153,13 +153,36 @@
         <LinearLayout
             android:id="@+id/keypadBg"
             android:layout_width="wrap_content"
-            android:layout_height="150dp"
+            android:layout_height="186dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="5dp" >
 	
+            <LinearLayout
+                android:layout_width="260dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_inputed_bg"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:padding="3dp" >
+            
+                <TextView
+                    android:id="@+id/keyPadInputed"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="*type the word*" />
+                
+            </LinearLayout>    
+                
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -349,6 +372,12 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="2dp"
                 android:src="@drawable/ic_key_m" />
+                <ImageView
+                android:id="@+id/ic_key_del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="2dp"
+                android:src="@drawable/ic_key_del" />
                 
 		    </LinearLayout>
             

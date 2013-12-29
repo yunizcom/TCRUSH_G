@@ -59,7 +59,7 @@ public class initSetup {
 	
 	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn;
 	
-	private TextView stageLevelShow,stageTimeShow;
+	private TextView stageLevelShow,stageTimeShow,keyPadInputed;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -118,6 +118,7 @@ public class initSetup {
 		
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
+		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
 	    
 		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
 		
@@ -131,6 +132,7 @@ public class initSetup {
 		globalVariable.curentStage = 0;
 		
 		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
+		Typeface tf2 = Typeface.createFromAsset(myActivity.getAssets(), "fonts/GROBOLD.ttf");
 		stageLevelShow.setTextSize(20f);
 		stageLevelShow.setTypeface(tf);
 		stageLevelShow.setTextColor(Color.parseColor("#ff7979"));
@@ -138,6 +140,10 @@ public class initSetup {
 		stageTimeShow.setTextSize(20f);
 		stageTimeShow.setTypeface(tf);
 		stageTimeShow.setTextColor(Color.parseColor("#ff7979"));
+		
+		keyPadInputed.setTextSize(14f);
+		keyPadInputed.setTypeface(tf2);
+		keyPadInputed.setTextColor(Color.parseColor("#333333"));
 		
 		slashScreen.postDelayed(new Runnable() {
 	        @Override

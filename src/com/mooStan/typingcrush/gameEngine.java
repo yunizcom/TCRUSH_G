@@ -2,8 +2,7 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.json.JSONException;
+import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,9 +25,9 @@ public class gameEngine extends Activity {
 	private Context myContext;
 	private Activity myActivity;
 	
-	private TextView stageLevelShow, stageTimeShow;
+	private TextView stageLevelShow, stageTimeShow, keyPadInputed;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
-	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m;
+	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
 	
 	public soundsController soundsController;
 	
@@ -37,7 +35,10 @@ public class gameEngine extends Activity {
 	
 	private boolean stopCounter = false;
 	
-	private int currentLevel = 1, screenWidth = 0, screenHeight = 0, sdk = 0, countDowns = 0, countTotalDowns = 0;
+	private int currentTill = 0, currentLevel = 1, screenWidth = 0, screenHeight = 0, sdk = 0, countDowns = 0, countTotalDowns = 0;
+	
+	private String[] currentLevelChallenge, lettersLib = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+	private String curTypedWord = "";
 	
 	gameEngine(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -49,6 +50,7 @@ public class gameEngine extends Activity {
 		
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
+		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
 		
 		ic_time_bar = (ImageView) myActivity.findViewById(R.id.ic_time_bar);
 		
@@ -78,6 +80,7 @@ public class gameEngine extends Activity {
 		ic_key_b = (ImageView) myActivity.findViewById(R.id.ic_key_b);
 		ic_key_n = (ImageView) myActivity.findViewById(R.id.ic_key_n);
 		ic_key_m = (ImageView) myActivity.findViewById(R.id.ic_key_m);
+		ic_key_del = (ImageView) myActivity.findViewById(R.id.ic_key_del);
 		
 		slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
@@ -104,6 +107,43 @@ public class gameEngine extends Activity {
     	
     	stopCounter = false;
     	timerCountDown();
+    	
+    	generateLevelChallenge(currentLevel, 50);
+	}
+	
+	private void generateLevelChallenge(int difficulty, int totalList){
+		currentLevelChallenge = new String[totalList];
+		for(int i=0;i<totalList;i++){
+			currentLevelChallenge[i] = randomStringFromArray(difficulty,lettersLib);
+		}
+	}
+	
+	private String randomStringFromArray(int total, String[] library){
+		String randomString = "";
+		
+		for(int i=0;i<total;i++){
+			randomString = randomString + library[randomNumber(0,25)];
+		}
+		
+		return randomString;
+	}
+	
+	private int randomNumber(int min, int max){
+		Random r = new Random();
+    	int i1 = r.nextInt(max - min + 1) + min;
+    	return i1;
+	}
+	
+	private void typingHit(String curKeys){
+		for(String s : currentLevelChallenge)
+	    {
+	        if(curKeys.equals(s))
+	        {
+	        	currentTill++;
+	        	break;
+	        }
+	    }
+		
 	}
 	
 	public void stopGameStage(){
@@ -209,7 +249,9 @@ public class gameEngine extends Activity {
 	}
 	
 	private void keyPressReceiver(String keycode){
-		Log.v("debug",keycode);
+		curTypedWord = curTypedWord + keycode;
+		keyPadInputed.setText(curTypedWord);
+		typingHit(curTypedWord);
 	}
 	
 	//-----------all keys press-------------
@@ -779,6 +821,28 @@ public class gameEngine extends Activity {
 		            	ic_key_m.setAlpha(255);
 		            	
 		            	keyPressReceiver("m");
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+		
+		ic_key_del.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/keypad_click.mp3");
+		            	ic_key_del.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_key_del.setAlpha(255);
+		            	
+		            	//keyPressReceiver("m");
 		            	
 		                break;
 		            }
