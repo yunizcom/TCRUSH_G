@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 public class GlobalVars extends Application {
 	public static final String PREFS_SETTINGS = "YunizSaved";
 	public boolean isPopUpOpen = false, stopCounter = false;
-	public int currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0;
+	public int currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0;
 	public String curTypedWord;
 	public String[] currentLevelChallenge;
 

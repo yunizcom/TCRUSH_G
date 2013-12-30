@@ -7,15 +7,20 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mooStan.typingcrush.soundsController;
@@ -27,6 +32,7 @@ public class gameEngine extends Activity {
 	
 	private TextView stageLevelShow, stageTimeShow, keyPadInputed;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
+	private LinearLayout gameObjects;
 	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
 	
 	public soundsController soundsController;
@@ -83,11 +89,15 @@ public class gameEngine extends Activity {
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
+		gameObjects = (LinearLayout) myActivity.findViewById(R.id.gameObjects);
 		
 		initAllKeysPress();
 	}
 
 	public void startGameEngine(int level, int p_sdk){
+		gameObjects.removeAllViewsInLayout();
+		System.gc();
+		
 		sdk = p_sdk;
 		currentLevel = level;
 		stageLevelShow.setText("Lvl " + currentLevel);
@@ -106,8 +116,53 @@ public class gameEngine extends Activity {
     	
     	generateLevelChallenge(currentLevel, 50);
     	
+    	globalVariable.curShownObject = 0;
+    	globalVariable.currentTill = 0;
+    	createGameObjects(globalVariable.curShownObject);
+    	
     	globalVariable.stopCounter = false;
     	timerCountDown();
+
+	}
+	
+	private void createGameObjects(int curObject){
+
+		globalVariable.curShownObject++;
+		
+		int wordPos = randomNumber(0,2), paddings = randomNumber(0,50) + 2;
+
+		LinearLayout levelBox = new LinearLayout(myActivity);
+		TextView levelText = new TextView(myActivity);
+	
+		switch(wordPos){
+			case 0:{
+				levelBox.setGravity(Gravity.LEFT);
+				break;
+			}
+			case 1:{
+				levelBox.setGravity(Gravity.CENTER);
+				break;
+			}
+			case 2:{
+				levelBox.setGravity(Gravity.RIGHT);
+				break;
+			}
+		}
+		
+		//setStageBackground_text(levelText,"backgrounds/objects_bg.png");
+		
+		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/GROBOLD.ttf");
+		levelText.setTypeface(tf);
+		levelText.setTextSize(20f);
+		levelText.setTextColor(Color.parseColor("#333333"));
+		levelText.setPadding(paddings, 2, paddings, 2);
+		
+		levelText.setText(globalVariable.currentLevelChallenge[curObject]);
+		
+		levelBox.setId(curObject);
+		levelBox.addView(levelText);
+		gameObjects.addView(levelBox,0);
+
 	}
 	
 	private void generateLevelChallenge(int difficulty, int totalList){
@@ -134,10 +189,20 @@ public class gameEngine extends Activity {
 	}
 	
 	private void typingHit(String curKeys){
+		if( globalVariable.currentLevelChallenge.length <= globalVariable.currentTill ){
+			return;
+		}
+		
 		if(globalVariable.currentLevelChallenge[globalVariable.currentTill].equals(curKeys)){
+			soundsController.shortSoundClip("sounds/word_hit.mp3");
 			globalVariable.currentTill++;
 			globalVariable.curTypedWord = "";
 			keyPadInputed.setText(globalVariable.curTypedWord);
+			gameObjects.removeViewAt(gameObjects.getChildCount() - 1);
+			
+			if( globalVariable.currentLevelChallenge.length <= globalVariable.currentTill ){
+				gameOver(0);
+			}
 		}
 		
 		/*for(String s : currentLevelChallenge)
@@ -149,6 +214,11 @@ public class gameEngine extends Activity {
 	        }
 	    }*/
 		
+	}
+	
+	private void gameOver(int types){
+		stopGameStage();
+		Log.v("debug",types + " - TIMEOUT ! GAME OVER");
 	}
 	
 	public void stopGameStage(){
@@ -184,9 +254,16 @@ public class gameEngine extends Activity {
       	
 	        	stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
 	        	
-	        	if(globalVariable.countDowns > 0){
+	        	if(globalVariable.curShownObject < globalVariable.currentLevelChallenge.length){
+	        		createGameObjects(globalVariable.curShownObject);
+	        	}	
+	        		
+        		if(globalVariable.countDowns > 0){
 	        		timerCountDown();
+	        	}else{
+	        		gameOver(1);
 	        	}
+
 	        }
 	    }, 1000);
 	}
@@ -226,6 +303,31 @@ public class gameEngine extends Activity {
 		thisStage.setClickable(true);
 		
 		System.gc();
+	}
+	
+	@SuppressLint("NewApi")
+	public void setStageBackground_text(TextView thisStage, String fileName){
+
+		try 
+		{
+			InputStream ims = myActivity.getAssets().open(fileName);
+		    Drawable d = Drawable.createFromStream(ims, null);
+		    
+		    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    	thisStage.setBackgroundDrawable(d);
+		    } else {
+		    	thisStage.setBackground(d);
+		    }
+		    
+		    ims = null;
+		    d = null;
+
+		}
+		catch(IOException ex) 
+		{
+		    return;
+		}
+		
 	}
 	
 	@SuppressLint("NewApi")

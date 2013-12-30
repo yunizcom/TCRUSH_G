@@ -113,6 +113,20 @@
 
 	    android:id="@+id/gameStage" >
 
+        <LinearLayout
+            android:id="@+id/gameObjects"
+            android:layout_width="wrap_content"
+            android:layout_height="186dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/keypadBg"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp" >
+	        
+        </LinearLayout>    
+        
         <TextView
             android:id="@+id/stageLevelShow"
             android:layout_width="wrap_content"
@@ -149,7 +163,7 @@
             android:layout_below="@+id/stageTimeShow"
             android:scaleType="fitXY"
             android:src="@drawable/ic_time_bar_cover" />
-        
+
         <LinearLayout
             android:id="@+id/keypadBg"
             android:layout_width="wrap_content"

@@ -60,6 +60,7 @@ public class objectsController {
 	
 	public void createLevelOptions(int curLevel){
 		level_list.removeAllViewsInLayout();
+		System.gc();
 
 		curGloLevel = curLevel;
 		
