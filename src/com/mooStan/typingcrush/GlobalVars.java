@@ -8,9 +8,10 @@ import android.content.SharedPreferences;
 
 public class GlobalVars extends Application {
 	public static final String PREFS_SETTINGS = "YunizSaved";
-	public boolean isPopUpOpen = false;
-	public int curentStage = 0;
-	public int gameStage_TimeBar_Width = 0;
+	public boolean isPopUpOpen = false, stopCounter = false;
+	public int currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0;
+	public String curTypedWord;
+	public String[] currentLevelChallenge;
 
     public void saveYunizSaved(int level, int bombs, String playername, int shares){ // usage : saveYunizSaved(10, 2, "Stanly", 1);
 		  SharedPreferences settings = this.getSharedPreferences(PREFS_SETTINGS, 0);

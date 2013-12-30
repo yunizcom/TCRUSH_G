@@ -33,13 +33,10 @@ public class gameEngine extends Activity {
 	
 	private GlobalVars globalVariable;
 	
-	private boolean stopCounter = false;
+	private int currentLevel = 1, screenWidth = 0, screenHeight = 0, sdk = 0;
 	
-	private int currentTill = 0, currentLevel = 1, screenWidth = 0, screenHeight = 0, sdk = 0, countDowns = 0, countTotalDowns = 0;
-	
-	private String[] currentLevelChallenge, lettersLib = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
-	private String curTypedWord = "";
-	
+	private String[] lettersLib = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+
 	gameEngine(Context context, Activity myActivityReference) {
 		myContext = context;
 		myActivity = myActivityReference;
@@ -95,26 +92,28 @@ public class gameEngine extends Activity {
 		currentLevel = level;
 		stageLevelShow.setText("Lvl " + currentLevel);
 		
-		countDowns = 30 + (level * 5);
-		countTotalDowns = countDowns;
+		globalVariable.countDowns = 30 + (level * 5);
+		globalVariable.countTotalDowns = globalVariable.countDowns;
 		
-		stageTimeShow.setText("Time : " + secToString(countDowns));
+		stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
+		globalVariable.curTypedWord = "";
+		keyPadInputed.setText("*start typing now*");
 		
 		stageController(gameStage);
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
     	
-    	setCountDownTimerBar(countDowns);
-    	
-    	stopCounter = false;
-    	timerCountDown();
+    	setCountDownTimerBar(globalVariable.countDowns);
     	
     	generateLevelChallenge(currentLevel, 50);
+    	
+    	globalVariable.stopCounter = false;
+    	timerCountDown();
 	}
 	
 	private void generateLevelChallenge(int difficulty, int totalList){
-		currentLevelChallenge = new String[totalList];
+		globalVariable.currentLevelChallenge = new String[totalList];
 		for(int i=0;i<totalList;i++){
-			currentLevelChallenge[i] = randomStringFromArray(difficulty,lettersLib);
+			globalVariable.currentLevelChallenge[i] = randomStringFromArray(difficulty,lettersLib);
 		}
 	}
 	
@@ -135,25 +134,29 @@ public class gameEngine extends Activity {
 	}
 	
 	private void typingHit(String curKeys){
-		for(String s : currentLevelChallenge)
+		if(globalVariable.currentLevelChallenge[globalVariable.currentTill].equals(curKeys)){
+			globalVariable.currentTill++;
+			globalVariable.curTypedWord = "";
+			keyPadInputed.setText(globalVariable.curTypedWord);
+		}
+		
+		/*for(String s : currentLevelChallenge)
 	    {
 	        if(curKeys.equals(s))
 	        {
 	        	currentTill++;
 	        	break;
 	        }
-	    }
+	    }*/
 		
 	}
 	
 	public void stopGameStage(){
 		ic_time_bar.clearAnimation();
-		stopCounter = true;
+		globalVariable.stopCounter = true;
 	}
 	
 	private void setCountDownTimerBar(int size){
-		//ic_time_bar.getLayoutParams().width = size;
-		
 		Animation animationScale = new ScaleAnimation(1, 0, 1, 1);
     	animationScale.setDuration((size + 2) * 1000);
 
@@ -165,21 +168,23 @@ public class gameEngine extends Activity {
 	}
 	
 	private void timerCountDown(){
-		
-		if(stopCounter == true){
+		if(globalVariable.stopCounter == true){
 			return;
 		}
-		
-		//int barSize = globalVariable.gameStage_TimeBar_Width * (int)(countDowns * 100 / countTotalDowns) / 100;
 
 		ic_time_bar.postDelayed(new Runnable() {
 	        @Override
 	        public void run() {
-	        	countDowns--;
+        	
+	        	if(globalVariable.stopCounter == true){
+	    			return;
+	    		}
 	        	
-	        	stageTimeShow.setText("Time : " + secToString(countDowns));
+	        	globalVariable.countDowns--;
+      	
+	        	stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
 	        	
-	        	if(countDowns > 0){
+	        	if(globalVariable.countDowns > 0){
 	        		timerCountDown();
 	        	}
 	        }
@@ -189,8 +194,8 @@ public class gameEngine extends Activity {
 	private String secToString(int secStr){
 		String returnStr = "00:00";
 		
-		int minVal = (int)(countDowns / 60);
-    	int secVal = (int)(countDowns % 60);
+		int minVal = (int)(globalVariable.countDowns / 60);
+    	int secVal = (int)(globalVariable.countDowns % 60);
     	
     	String minValStr = minVal + "";
     	String secValStr = secVal + "";
@@ -249,9 +254,16 @@ public class gameEngine extends Activity {
 	}
 	
 	private void keyPressReceiver(String keycode){
-		curTypedWord = curTypedWord + keycode;
-		keyPadInputed.setText(curTypedWord);
-		typingHit(curTypedWord);
+		if(keycode == "del"){
+			if(globalVariable.curTypedWord.length() > 0){
+				globalVariable.curTypedWord = globalVariable.curTypedWord.substring(0, globalVariable.curTypedWord.length() - 1);
+			}
+		}else{
+			globalVariable.curTypedWord = globalVariable.curTypedWord + keycode;
+		}
+
+		keyPadInputed.setText(globalVariable.curTypedWord);
+		typingHit(globalVariable.curTypedWord);
 	}
 	
 	//-----------all keys press-------------
@@ -842,7 +854,7 @@ public class gameEngine extends Activity {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_key_del.setAlpha(255);
 		            	
-		            	//keyPressReceiver("m");
+		            	keyPressReceiver("del");
 		            	
 		                break;
 		            }
