@@ -59,7 +59,7 @@ public class initSetup {
 	
 	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn;
 	
-	private TextView stageLevelShow,stageTimeShow,keyPadInputed;
+	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -119,6 +119,7 @@ public class initSetup {
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
 		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
+		ic_trophy_game_scores = (TextView) myActivity.findViewById(R.id.ic_trophy_game_scores);
 	    
 		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
 		
@@ -140,6 +141,10 @@ public class initSetup {
 		stageTimeShow.setTextSize(20f);
 		stageTimeShow.setTypeface(tf);
 		stageTimeShow.setTextColor(Color.parseColor("#ff7979"));
+		
+		ic_trophy_game_scores.setTextSize(24f);
+		ic_trophy_game_scores.setTypeface(tf);
+		ic_trophy_game_scores.setTextColor(Color.parseColor("#ff3b3b"));
 		
 		keyPadInputed.setTextSize(14f);
 		keyPadInputed.setTypeface(tf2);
@@ -245,15 +250,7 @@ public class initSetup {
 		            	objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
 		            	globalVariable.curentStage++;
 
-		            	try {
-		            		objectsController.createLevelOptions(Integer.valueOf(globalVariable.retriveScoreValue().getString("YunizCurLevel")));
-						} catch (NumberFormatException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+		            	objectsController.createLevelOptions(globalVariable.getLevel());
 		            	
 		                break;
 		            }
@@ -275,15 +272,7 @@ public class initSetup {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_continue_btn.setAlpha(255);
 		            	
-		            	try {
-							gameEngine.startGameEngine((Integer.valueOf(globalVariable.retriveScoreValue().getString("YunizCurLevel")) + 1),sdk);
-						} catch (NumberFormatException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+		            	gameEngine.startGameEngine((globalVariable.getLevel() + 1),sdk);
 		            	
 		            	globalVariable.curentStage++;
 		            	
@@ -316,6 +305,8 @@ public class initSetup {
 					gameEngine.stopGameStage();
 					stageController(sub_menu);
 					objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+					
+					objectsController.createLevelOptions(globalVariable.getLevel());
 					
 					break;
 				}

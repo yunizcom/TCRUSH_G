@@ -148,6 +148,27 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
         
         <ImageView
+            android:id="@+id/ic_trophy_game_stage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/stageTimeShow"
+            android:layout_toLeftOf="@+id/stageTimeShow"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_trophy_game_stage" />
+        
+        <TextView
+            android:id="@+id/ic_trophy_game_scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/stageTimeShow"
+            android:layout_toLeftOf="@+id/ic_trophy_game_stage"
+            android:padding="2dp"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <ImageView
             android:id="@+id/ic_time_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

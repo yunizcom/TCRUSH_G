@@ -33,7 +33,7 @@ public class gameEngine extends Activity {
 	private Context myContext;
 	private Activity myActivity;
 	
-	private TextView stageLevelShow, stageTimeShow, keyPadInputed;
+	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
 	private LinearLayout gameObjects;
 	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
@@ -57,6 +57,7 @@ public class gameEngine extends Activity {
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
 		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
+		ic_trophy_game_scores = (TextView) myActivity.findViewById(R.id.ic_trophy_game_scores);
 		
 		ic_time_bar = (ImageView) myActivity.findViewById(R.id.ic_time_bar);
 		
@@ -105,12 +106,15 @@ public class gameEngine extends Activity {
 		currentLevel = level;
 		stageLevelShow.setText("Lvl " + currentLevel);
 		
+		globalVariable.scores = 0;
 		globalVariable.countDowns = 30 + (level * 5);
 		globalVariable.countTotalDowns = globalVariable.countDowns;
 		
 		stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
 		globalVariable.curTypedWord = "";
 		keyPadInputed.setText("*start typing now*");
+		
+		ic_trophy_game_scores.setText(globalVariable.scores + "");
 		
 		stageController(gameStage);
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
@@ -121,7 +125,6 @@ public class gameEngine extends Activity {
     	globalVariable.currentLevels = currentLevel;
     	globalVariable.currentToDelayed = (int)(currentLevel / 2) + 1;
     	if(globalVariable.currentToDelayed < 1){globalVariable.currentToDelayed = 1;}
-    	Log.v("debug",globalVariable.currentToDelayed + "");
     	
     	globalVariable.curShownObject = 0;
     	globalVariable.currentTill = 0;
@@ -246,6 +249,8 @@ public class gameEngine extends Activity {
 				keyPadInputed.setText(globalVariable.curTypedWord);
 				gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex);
 				globalVariable.curShownObject--;
+				globalVariable.scores = globalVariable.scores + 1;
+				ic_trophy_game_scores.setText(globalVariable.scores + "");
 				
 				if( globalVariable.currentLevelChallenge.length <= 9 ){
 					gameOver(0);
@@ -274,7 +279,22 @@ public class gameEngine extends Activity {
 	
 	private void gameOver(int types){
 		stopGameStage();
-		Log.v("debug",types + " - TIMEOUT ! GAME OVER");
+		
+		switch(types) {
+			case 0: {
+				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels) + globalVariable.countDowns;
+				break;
+			}
+			case 1: {
+				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels);
+				break;
+			}
+		}
+		
+		ic_trophy_game_scores.setText(globalVariable.scores + "");
+
+		globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+
 	}
 	
 	public void stopGameStage(){
