@@ -2,6 +2,9 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -114,7 +117,11 @@ public class gameEngine extends Activity {
     	
     	setCountDownTimerBar(globalVariable.countDowns);
     	
-    	generateLevelChallenge(currentLevel, 50);
+    	generateLevelChallenge(currentLevel, (50 + currentLevel));
+    	globalVariable.currentLevels = currentLevel;
+    	globalVariable.currentToDelayed = (int)(currentLevel / 2) + 1;
+    	if(globalVariable.currentToDelayed < 1){globalVariable.currentToDelayed = 1;}
+    	Log.v("debug",globalVariable.currentToDelayed + "");
     	
     	globalVariable.curShownObject = 0;
     	globalVariable.currentTill = 0;
@@ -163,12 +170,22 @@ public class gameEngine extends Activity {
 		levelBox.addView(levelText);
 		gameObjects.addView(levelBox,0);
 
+		if(gameObjects.getChildCount() > 9){
+			forfeitObject(0);
+		}
+		
 	}
 	
 	private void generateLevelChallenge(int difficulty, int totalList){
-		globalVariable.currentLevelChallenge = new String[totalList];
+		int increaseEmpty = 9;
+		globalVariable.currentLevelChallenge = new String[totalList + increaseEmpty];
+		int untilIndex = 0;
 		for(int i=0;i<totalList;i++){
 			globalVariable.currentLevelChallenge[i] = randomStringFromArray(difficulty,lettersLib);
+			untilIndex++;
+		}
+		for(int i=untilIndex;i<=increaseEmpty;i++){
+			globalVariable.currentLevelChallenge[i] = "";
 		}
 	}
 	
@@ -189,7 +206,7 @@ public class gameEngine extends Activity {
 	}
 	
 	private void typingHit(String curKeys){
-		if( globalVariable.currentLevelChallenge.length <= globalVariable.currentTill ){
+		/*if( globalVariable.currentLevelChallenge.length <= globalVariable.currentTill ){
 			return;
 		}
 		
@@ -203,17 +220,56 @@ public class gameEngine extends Activity {
 			if( globalVariable.currentLevelChallenge.length <= globalVariable.currentTill ){
 				gameOver(0);
 			}
+		}*/
+		
+		if( globalVariable.currentLevelChallenge.length <= 9 || curKeys.equals("")){
+			return;
 		}
 		
-		/*for(String s : currentLevelChallenge)
+		globalVariable.currArrayItemIndex = 0;
+		
+		String[] arraylist = globalVariable.currentLevelChallenge;
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, arraylist);
+
+		for(String s : globalVariable.currentLevelChallenge)
 	    {
 	        if(curKeys.equals(s))
-	        {
-	        	currentTill++;
+	        {//Log.v("debug",gameObjects.getChildCount() + "|" + ((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex) + "|" + globalVariable.currArrayItemIndex + "|" + s);
+	        	if(((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex) < 0){
+	        		return;
+	        	}
+	        	
+	        	list.remove(globalVariable.currArrayItemIndex);
+	        	soundsController.shortSoundClip("sounds/word_hit.mp3");
+	        	globalVariable.curTypedWord = "";
+				keyPadInputed.setText(globalVariable.curTypedWord);
+				gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex);
+				globalVariable.curShownObject--;
+				
+				if( globalVariable.currentLevelChallenge.length <= 9 ){
+					gameOver(0);
+				}
+				
 	        	break;
 	        }
-	    }*/
+	        
+	        globalVariable.currArrayItemIndex++;
+	    }
 		
+		globalVariable.currentLevelChallenge = list.toArray(new String[list.size()]);
+	}
+	
+	private void forfeitObject(int index){
+		String[] arraylist = globalVariable.currentLevelChallenge;
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, arraylist);
+		
+		list.remove(index);
+		gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - index);
+		globalVariable.curShownObject--;
+		
+		globalVariable.currentLevelChallenge = list.toArray(new String[list.size()]);
 	}
 	
 	private void gameOver(int types){
@@ -255,9 +311,20 @@ public class gameEngine extends Activity {
 	        	stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
 	        	
 	        	if(globalVariable.curShownObject < globalVariable.currentLevelChallenge.length){
-	        		createGameObjects(globalVariable.curShownObject);
-	        	}	
 	        		
+	        		if(globalVariable.currentObjDelayed == globalVariable.currentToDelayed){
+	        			createGameObjects(globalVariable.curShownObject);
+	        			globalVariable.currentObjDelayed = 0;
+	        		}else{
+	        			globalVariable.currentObjDelayed++;
+	        		}
+
+	        	}	
+	        	
+	        	if( globalVariable.currentLevelChallenge.length <= 9 ){
+					gameOver(0);
+				}
+	        	
         		if(globalVariable.countDowns > 0){
 	        		timerCountDown();
 	        	}else{
@@ -356,6 +423,10 @@ public class gameEngine extends Activity {
 	}
 	
 	private void keyPressReceiver(String keycode){
+		if(globalVariable.stopCounter == true){
+			return;
+		}
+		
 		if(keycode == "del"){
 			if(globalVariable.curTypedWord.length() > 0){
 				globalVariable.curTypedWord = globalVariable.curTypedWord.substring(0, globalVariable.curTypedWord.length() - 1);
