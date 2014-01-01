@@ -69,23 +69,34 @@ public class objectsController {
 		for(int i = 1;i <= maxLevel;i++){
 			ImageView levelEgg = new ImageView(myActivity);
 			LinearLayout levelBox = new LinearLayout(myActivity);
+			LinearLayout levelDetails = new LinearLayout(myActivity);
 			TextView levelText = new TextView(myActivity);
+			TextView scoresText = new TextView(myActivity);
 		
-			levelBox.setGravity(Gravity.CENTER);
+			levelBox.setGravity(Gravity.LEFT);
+			levelDetails.setOrientation(LinearLayout.VERTICAL);
 			
 			Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
 			levelText.setTypeface(tf);
-			levelText.setTextSize(35);
-			levelText.setPadding(20, 20, 20, 20);
+			levelText.setTextSize(25);
+			levelText.setPadding(20, 10, 20, 0);
 			
 			levelText.setText("Level " + i);
+			
+			scoresText.setTypeface(tf);
+			scoresText.setTextSize(20);
+			scoresText.setPadding(20, 10, 20, 10);
+			
+			scoresText.setText("0 pts");
 			
 			if( i <= curLevel){
 				levelEgg.setImageResource(R.drawable.ic_egg_enable);
 				levelText.setTextColor(Color.parseColor("#b60202"));
+				scoresText.setTextColor(Color.parseColor("#b60202"));
 			}else{
 				levelEgg.setImageResource(R.drawable.ic_egg_disable);
 				levelText.setTextColor(Color.parseColor("#656060"));
+				scoresText.setTextColor(Color.parseColor("#656060"));
 			}
 
 			levelBox.setOnClickListener(new OnClickListener(){
@@ -95,9 +106,13 @@ public class objectsController {
 		        }
 		    });
 			
+			levelDetails.addView(levelText);
+			levelDetails.addView(scoresText);
+			
 			levelBox.setId(i);
 			levelBox.addView(levelEgg);
-			levelBox.addView(levelText);
+			levelBox.addView(levelDetails);
+			
 			level_list.addView(levelBox);
 		}
 		

@@ -107,24 +107,29 @@ public class gameEngine extends Activity {
 		stageLevelShow.setText("Lvl " + currentLevel);
 		
 		globalVariable.scores = 0;
-		globalVariable.countDowns = 30 + (level * 5);
-		globalVariable.countTotalDowns = globalVariable.countDowns;
 		
-		stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
 		globalVariable.curTypedWord = "";
-		keyPadInputed.setText("*start typing now*");
+		keyPadInputed.setText("* start typing now *");
 		
 		ic_trophy_game_scores.setText(globalVariable.scores + "");
 		
 		stageController(gameStage);
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
-    	
-    	setCountDownTimerBar(globalVariable.countDowns);
-    	
+
     	generateLevelChallenge(currentLevel, (50 + currentLevel));
     	globalVariable.currentLevels = currentLevel;
-    	globalVariable.currentToDelayed = (int)(currentLevel / 2) + 1;
-    	if(globalVariable.currentToDelayed < 1){globalVariable.currentToDelayed = 1;}
+    	globalVariable.currentToDelayed = (int)(currentLevel / 2);
+    	globalVariable.countDowns = (50 + currentLevel) * globalVariable.currentToDelayed;
+    	globalVariable.currentToDelayed = globalVariable.currentToDelayed * 1000;
+    	if(globalVariable.currentToDelayed < 1){
+    		globalVariable.currentToDelayed = 1000;
+    		globalVariable.countDowns = (50 + currentLevel) * 1;
+    	}
+    	
+    	//globalVariable.countDowns = 30 + (currentLevel * 5);
+		globalVariable.countTotalDowns = globalVariable.countDowns;
+		stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
+		setCountDownTimerBar(globalVariable.countDowns);
     	
     	globalVariable.curShownObject = 0;
     	globalVariable.currentTill = 0;
@@ -132,6 +137,7 @@ public class gameEngine extends Activity {
     	
     	globalVariable.stopCounter = false;
     	timerCountDown();
+    	timerObjectCreate();
 
 	}
 	
@@ -293,7 +299,11 @@ public class gameEngine extends Activity {
 		
 		ic_trophy_game_scores.setText(globalVariable.scores + "");
 
-		globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+		if(globalVariable.currentLevels > globalVariable.getLevel()){
+			globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+		}else{
+			globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+		}
 
 	}
 	
@@ -329,22 +339,7 @@ public class gameEngine extends Activity {
 	        	globalVariable.countDowns--;
       	
 	        	stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
-	        	
-	        	if(globalVariable.curShownObject < globalVariable.currentLevelChallenge.length){
-	        		
-	        		if(globalVariable.currentObjDelayed == globalVariable.currentToDelayed){
-	        			createGameObjects(globalVariable.curShownObject);
-	        			globalVariable.currentObjDelayed = 0;
-	        		}else{
-	        			globalVariable.currentObjDelayed++;
-	        		}
 
-	        	}	
-	        	
-	        	if( globalVariable.currentLevelChallenge.length <= 9 ){
-					gameOver(0);
-				}
-	        	
         		if(globalVariable.countDowns > 0){
 	        		timerCountDown();
 	        	}else{
@@ -353,6 +348,35 @@ public class gameEngine extends Activity {
 
 	        }
 	    }, 1000);
+	}
+	
+	private void timerObjectCreate(){
+		if(globalVariable.stopCounter == true){
+			return;
+		}
+
+		ic_trophy_game_scores.postDelayed(new Runnable() {
+	        @Override
+	        public void run() {
+        	
+	        	if(globalVariable.stopCounter == true){
+	    			return;
+	    		}
+	        	
+	        	if(globalVariable.curShownObject < globalVariable.currentLevelChallenge.length){
+
+	        		createGameObjects(globalVariable.curShownObject);
+
+	        	}	
+	        	
+	        	if( globalVariable.currentLevelChallenge.length <= 9 ){
+					gameOver(0);
+				}else{
+					timerObjectCreate();
+				}
+
+	        }
+	    }, globalVariable.currentToDelayed);
 	}
 	
 	private String secToString(int secStr){
