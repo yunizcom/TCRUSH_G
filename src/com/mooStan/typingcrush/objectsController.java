@@ -2,6 +2,9 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.mooStan.typingcrush.R;
 
@@ -11,6 +14,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,7 +68,28 @@ public class objectsController {
 
 		curGloLevel = curLevel;
 		
-		int maxLevel = curLevel + 4;
+		int maxLevel = curLevel + 3;
+
+		//-----retrieve all saved scores-----
+		String curScores = globalVariable.getYunizScores();
+		String[] levelScores = curScores.split("[|]");
+		
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, levelScores);
+
+		for(int i = 0; i <= maxLevel; i++){			
+			if(i < levelScores.length){
+				if(levelScores[i].equals("")){
+					list.add(i, "0");
+				}else{
+					list.add(i, levelScores[i]);
+				}
+			}else{
+				list.add(i, "0");
+			}
+		}
+		levelScores = list.toArray(new String[list.size()]);
+		//-----retrieve all saved scores-----
 		
 		for(int i = 1;i <= maxLevel;i++){
 			ImageView levelEgg = new ImageView(myActivity);
@@ -87,12 +112,12 @@ public class objectsController {
 			scoresText.setTextSize(20);
 			scoresText.setPadding(20, 10, 20, 10);
 			
-			scoresText.setText("0 pts");
+			scoresText.setText(levelScores[(i-1)] + " pts");
 			
 			if( i <= curLevel){
 				levelEgg.setImageResource(R.drawable.ic_egg_enable);
 				levelText.setTextColor(Color.parseColor("#b60202"));
-				scoresText.setTextColor(Color.parseColor("#b60202"));
+				scoresText.setTextColor(Color.parseColor("#ff3b3b"));
 			}else{
 				levelEgg.setImageResource(R.drawable.ic_egg_disable);
 				levelText.setTextColor(Color.parseColor("#656060"));

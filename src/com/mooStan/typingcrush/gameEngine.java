@@ -138,11 +138,12 @@ public class gameEngine extends Activity {
     	globalVariable.stopCounter = false;
     	timerCountDown();
     	timerObjectCreate();
-
 	}
 	
 	private void createGameObjects(int curObject){
-
+		
+		soundsController.shortSoundClip("sounds/createWords.mp3");
+		
 		globalVariable.curShownObject++;
 		
 		int wordPos = randomNumber(0,2), paddings = randomNumber(0,50) + 2;
@@ -257,7 +258,7 @@ public class gameEngine extends Activity {
 				globalVariable.curShownObject--;
 				globalVariable.scores = globalVariable.scores + 1;
 				ic_trophy_game_scores.setText(globalVariable.scores + "");
-				
+
 				if( globalVariable.currentLevelChallenge.length <= 9 ){
 					gameOver(0);
 				}
@@ -286,23 +287,32 @@ public class gameEngine extends Activity {
 	private void gameOver(int types){
 		stopGameStage();
 		
-		switch(types) {
-			case 0: {
-				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels) + globalVariable.countDowns;
-				break;
-			}
-			case 1: {
-				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels);
-				break;
-			}
-		}
-		
-		ic_trophy_game_scores.setText(globalVariable.scores + "");
-
-		if(globalVariable.currentLevels > globalVariable.getLevel()){
-			globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+		if(globalVariable.scores < 10){
+			
+			Log.v("debug","FAILED");
+			
 		}else{
-			globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+		
+			switch(types) {
+				case 0: {
+					globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels) + globalVariable.countDowns;
+					break;
+				}
+				case 1: {
+					globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels);
+					break;
+				}
+			}
+
+			ic_trophy_game_scores.setText(globalVariable.scores + "");
+	
+			if(globalVariable.currentLevels > globalVariable.getLevel()){
+				globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+			}else{
+				globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
+			}
+		
+			globalVariable.saveYunizScores(globalVariable.currentLevels,globalVariable.scores);
 		}
 
 	}

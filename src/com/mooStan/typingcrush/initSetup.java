@@ -288,10 +288,13 @@ public class initSetup {
     
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
-		
+
 		if(globalVariable.isPopUpOpen == false){
 			globalVariable.curentStage--;
-		
+			if(globalVariable.curentStage < 0){
+				globalVariable.curentStage = 0;
+			}
+
 			switch(globalVariable.curentStage){
 				case 1 : {
 					

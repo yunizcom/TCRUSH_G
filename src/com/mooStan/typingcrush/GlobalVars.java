@@ -1,13 +1,21 @@
 package com.mooStan.typingcrush;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class GlobalVars extends Application {
-	public static final String PREFS_SETTINGS = "YunizSaved";
+	public static final String PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores";
 	public boolean isPopUpOpen = false, stopCounter = false;
 	public int scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
 	public String curTypedWord;
@@ -23,7 +31,7 @@ public class GlobalVars extends Application {
 
 	      editor.commit();
 	}
-	
+    
 	public JSONObject retriveScoreValue() throws JSONException{ // usage : retriveScoreValue().getString("YunizCurLevel") + " | " + retriveScoreValue().getString("YunizCurBombs") + " | " + retriveScoreValue().getString("YunizPlayerName") + " | " + retriveScoreValue().getString("YunizShared")
 		String returnString = "";
 		SharedPreferences settings = this.getSharedPreferences(PREFS_SETTINGS, 0);
@@ -32,6 +40,61 @@ public class GlobalVars extends Application {
 		JSONObject json = new JSONObject(returnString);
 
 		return json;
+	}
+	
+	public void saveYunizScores(int level, int scores){ // usage : saveYunizScores(10, 200);
+		  SharedPreferences settings = this.getSharedPreferences(PREFS_SETTINGS_SCORES, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      
+	      String curStr = getYunizScores();
+
+	      String levelScoresStr = "";
+	      String[] levelScores = curStr.split("[|]");
+      
+	    //-----retrieve all saved scores-----
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, levelScores);
+	
+		for(int i = list.size(); i < level; i++){
+			list.add(i, "0");
+		}
+		levelScores = list.toArray(new String[list.size()]);
+		//-----retrieve all saved scores-----
+      
+	      int index = 0;
+	      for(String s : levelScores)
+	      {
+	    	  if(level == (index + 1)){Log.v("debug",scores + "|" + level + "|" + (index + 1));
+	    		  levelScoresStr = levelScoresStr + scores + "|";
+	    	  }else{
+	    		  levelScoresStr = levelScoresStr + levelScores[index] + "|";
+	    	  }
+	    	  index++;
+	      }
+	      
+	      editor.putString("scores", levelScoresStr);
+
+	      editor.commit();
+	}
+	
+	public String getYunizScores(){ // usage : getYunizScores();
+		String curScoresList = "";
+		
+		SharedPreferences scores = this.getSharedPreferences(PREFS_SETTINGS_SCORES, 0);
+		curScoresList = scores.getString("scores", "");
+		
+		return curScoresList;
+	}
+	
+	public String getSelectedYunizScores(int index){ // usage : getSelectedYunizScores(0);
+		String curScoresList = "";
+		
+		SharedPreferences scores = this.getSharedPreferences(PREFS_SETTINGS_SCORES, 0);
+		curScoresList = scores.getString("scores", "");
+		
+		String[] levelScores = curScoresList.split("[|]");
+		
+		return levelScores[(index - 1)];
 	}
 	
 	public int getLevel(){
