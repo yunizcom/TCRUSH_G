@@ -160,7 +160,7 @@ public class objectsController {
         	globalVariable.curentStage++;
 			
 		}else{
-			popupBox.showPopBox("You are not allow to jump across levels, please play them one by one.");
+			popupBox.showPopBox("You are not allow to jump across levels, please play them one by one.",0);
 		}
 		
 	}

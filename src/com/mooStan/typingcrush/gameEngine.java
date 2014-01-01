@@ -39,6 +39,7 @@ public class gameEngine extends Activity {
 	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
 	
 	public soundsController soundsController;
+	public popupBox popupBox;
 	
 	private GlobalVars globalVariable;
 	
@@ -53,6 +54,7 @@ public class gameEngine extends Activity {
 		globalVariable = (GlobalVars) myActivity.getApplicationContext();
 		
 		soundsController = new soundsController(myContext,myActivity);
+		popupBox = new popupBox(myContext,myActivity);
 		
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
@@ -313,6 +315,8 @@ public class gameEngine extends Activity {
 			}
 		
 			globalVariable.saveYunizScores(globalVariable.currentLevels,globalVariable.scores);
+			
+			popupBox.showPopBox("",1);
 		}
 
 	}

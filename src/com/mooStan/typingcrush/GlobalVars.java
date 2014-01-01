@@ -64,7 +64,7 @@ public class GlobalVars extends Application {
 	      int index = 0;
 	      for(String s : levelScores)
 	      {
-	    	  if(level == (index + 1)){Log.v("debug",scores + "|" + level + "|" + (index + 1));
+	    	  if(level == (index + 1)){
 	    		  levelScoresStr = levelScoresStr + scores + "|";
 	    	  }else{
 	    		  levelScoresStr = levelScoresStr + levelScores[index] + "|";

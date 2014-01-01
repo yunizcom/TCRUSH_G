@@ -22,7 +22,7 @@ public class serverComm {
 	
 	public void checkInternetConnection(){
 		if(!isNetworkAvailable()){
-			popupBox.showPopBox("You need a smooth internet connection to play this game.");
+			popupBox.showPopBox("You need a smooth internet connection to submit scores.",0);
 		}
 	}
 	
