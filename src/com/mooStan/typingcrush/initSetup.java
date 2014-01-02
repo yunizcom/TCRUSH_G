@@ -289,7 +289,7 @@ public class initSetup {
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 
-		if(globalVariable.isPopUpOpen == false){
+		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false){
 			globalVariable.curentStage--;
 			if(globalVariable.curentStage < 0){
 				globalVariable.curentStage = 0;
@@ -321,6 +321,11 @@ public class initSetup {
 				}
 			}
 		}else{
+			if(globalVariable.isResultOpen == true){
+				globalVariable.curentStage--;
+				stageController(sub_menu);
+				objectsController.createLevelOptions(globalVariable.getLevel());
+			}
 			popupBox.closePopBox();
 		}
 	}

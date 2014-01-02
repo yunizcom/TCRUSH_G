@@ -70,6 +70,10 @@ public class objectsController {
 		
 		int maxLevel = curLevel + 3;
 
+		if(maxLevel >= 15){
+			maxLevel = 15;
+		}
+		
 		//-----retrieve all saved scores-----
 		String curScores = globalVariable.getYunizScores();
 		String[] levelScores = curScores.split("[|]");

@@ -144,7 +144,7 @@ public class gameEngine extends Activity {
 	
 	private void createGameObjects(int curObject){
 		
-		soundsController.shortSoundClip("sounds/createWords.mp3");
+		soundsController.objSoundClip("sounds/createWords.mp3");
 		
 		globalVariable.curShownObject++;
 		
@@ -272,6 +272,8 @@ public class gameEngine extends Activity {
 	    }
 		
 		globalVariable.currentLevelChallenge = list.toArray(new String[list.size()]);
+
+		
 	}
 	
 	private void forfeitObject(int index){

@@ -12,14 +12,16 @@ import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 public class GlobalVars extends Application {
 	public static final String PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores";
-	public boolean isPopUpOpen = false, stopCounter = false;
-	public int scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
+	public boolean isResultOpen = false, isPopUpOpen = false, stopCounter = false;
+	public int minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
 	public String curTypedWord;
 	public String[] currentLevelChallenge;
+	public MediaPlayer bgMusic = new MediaPlayer(), shortMusic = new MediaPlayer(), objMusic = new MediaPlayer();
 
     public void saveYunizSaved(int level, int bombs, String playername, int shares){ // usage : saveYunizSaved(10, 2, "Stanly", 1);
 		  SharedPreferences settings = this.getSharedPreferences(PREFS_SETTINGS, 0);
