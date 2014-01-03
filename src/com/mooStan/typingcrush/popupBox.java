@@ -219,8 +219,36 @@ public class popupBox {
 				popboxResultPts.setText(globalVariable.scores + "\npoints");
 				popboxResultPts2.setText(globalVariable.scores + "\npoints");
 				
+				ic_submit_button.setVisibility(View.VISIBLE);
+				ic_fb_share.setVisibility(View.VISIBLE);
+				
 				popboxResult.setVisibility(View.VISIBLE);
 				popbox_trophy.setVisibility(View.VISIBLE);
+				ic_popbox_close.setVisibility(View.VISIBLE);
+				
+				globalVariable.isResultOpen = true;
+				break;
+			}
+			case 2:{
+				soundsController.shortSoundClip("sounds/levelFailed.mp3");
+				
+				popboxResultLvl.setText("Level " + globalVariable.currentLevels + " FAILED");
+				popboxResultLvl2.setText("Level " + globalVariable.currentLevels + " FAILED");
+				
+				int topScore = Integer.valueOf(globalVariable.getSelectedYunizScores(globalVariable.currentLevels));
+				
+				if(topScore >= globalVariable.scores){
+					popboxResultPts.setText("You need " + (topScore + 1) + " points");
+					popboxResultPts2.setText("You need " + (topScore + 1) + " points");
+				}else{
+					popboxResultPts.setText("You need " + (globalVariable.currentLevels * 10) + " points");
+					popboxResultPts2.setText("You need " + (globalVariable.currentLevels * 10) + " points");
+				}
+				
+				ic_submit_button.setVisibility(View.INVISIBLE);
+				ic_fb_share.setVisibility(View.INVISIBLE);
+				
+				popboxResult.setVisibility(View.VISIBLE);
 				ic_popbox_close.setVisibility(View.VISIBLE);
 				
 				globalVariable.isResultOpen = true;

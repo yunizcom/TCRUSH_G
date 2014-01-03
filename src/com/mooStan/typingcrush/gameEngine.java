@@ -291,25 +291,31 @@ public class gameEngine extends Activity {
 	private void gameOver(int types){
 		stopGameStage();
 		
-		if(globalVariable.scores < 10){
+		switch(types) {
+			case 0: {
+				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels) + globalVariable.countDowns;
+				break;
+			}
+			case 1: {
+				globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels);
+				break;
+			}
+		}
+		
+		ic_trophy_game_scores.setText(globalVariable.scores + "");
+		
+		int topScore = Integer.valueOf(globalVariable.getSelectedYunizScores(globalVariable.currentLevels));
+		
+		if(topScore >= globalVariable.scores){
 			
-			Log.v("debug","FAILED");
+			popupBox.showPopBox("",2);
+			
+		}else if(globalVariable.scores < (globalVariable.currentLevels * 10)){
+			
+			popupBox.showPopBox("",2);
 			
 		}else{
-		
-			switch(types) {
-				case 0: {
-					globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels) + globalVariable.countDowns;
-					break;
-				}
-				case 1: {
-					globalVariable.scores = (globalVariable.scores * globalVariable.currentLevels);
-					break;
-				}
-			}
 
-			ic_trophy_game_scores.setText(globalVariable.scores + "");
-	
 			if(globalVariable.currentLevels > globalVariable.getLevel()){
 				globalVariable.saveYunizSaved(globalVariable.currentLevels, globalVariable.getBomb(), globalVariable.getPlayerName(), globalVariable.getShare());
 			}else{

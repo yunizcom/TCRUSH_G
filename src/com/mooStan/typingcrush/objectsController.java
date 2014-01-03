@@ -161,7 +161,7 @@ public class objectsController {
 			
 			gameEngine.startGameEngine(level,sdk);
 			
-        	globalVariable.curentStage++;
+        	globalVariable.curentStage = 3;
 			
 		}else{
 			popupBox.showPopBox("You are not allow to jump across levels, please play them one by one.",0);

@@ -96,7 +96,11 @@ public class GlobalVars extends Application {
 		
 		String[] levelScores = curScoresList.split("[|]");
 		
-		return levelScores[(index - 1)];
+		if(levelScores.length < index){
+			return "0";
+		}else{
+			return levelScores[(index - 1)];
+		}
 	}
 	
 	public int getLevel(){

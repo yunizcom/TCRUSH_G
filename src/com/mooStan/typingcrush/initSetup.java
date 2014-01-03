@@ -159,7 +159,7 @@ public class initSetup {
 	    	        public void run() {
 	    	        	stageController(mainMenu);
 	    	        	objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
-	    	        	globalVariable.curentStage++;
+	    	        	globalVariable.curentStage = 1;
 	    	        	
 	    	        	serverComm.checkInternetConnection();
 	    	        	
@@ -248,7 +248,7 @@ public class initSetup {
 		            	
 		            	stageController(sub_menu);
 		            	objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
-		            	globalVariable.curentStage++;
+		            	globalVariable.curentStage = 2;
 
 		            	objectsController.createLevelOptions(globalVariable.getLevel());
 		            	
@@ -274,7 +274,7 @@ public class initSetup {
 		            	
 		            	gameEngine.startGameEngine((globalVariable.getLevel() + 1),sdk);
 		            	
-		            	globalVariable.curentStage++;
+		            	globalVariable.curentStage = 3;
 		            	
 		                break;
 		            }
@@ -290,21 +290,21 @@ public class initSetup {
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 
 		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false){
-			globalVariable.curentStage--;
+
 			if(globalVariable.curentStage < 0){
 				globalVariable.curentStage = 0;
 			}
 
 			switch(globalVariable.curentStage){
-				case 1 : {
-					
+				case 2 : {
+					globalVariable.curentStage = 1;
 					stageController(mainMenu);
 					objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
 					
 					break;
 				}
-				case 2 : {
-					
+				case 3 : {
+					globalVariable.curentStage = 2;
 					gameEngine.stopGameStage();
 					stageController(sub_menu);
 					objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
@@ -313,8 +313,8 @@ public class initSetup {
 					
 					break;
 				}
-				case 0 : {
-					
+				case 1 : {
+					globalVariable.curentStage = 0;
 					myActivity.finish();
 					
 					break;
@@ -322,7 +322,25 @@ public class initSetup {
 			}
 		}else{
 			if(globalVariable.isResultOpen == true){
-				globalVariable.curentStage--;
+
+				switch(globalVariable.curentStage){
+					case 2 : {
+						globalVariable.curentStage = 1;
+
+						break;
+					}
+					case 3 : {
+						globalVariable.curentStage = 2;
+
+						break;
+					}
+					case 1 : {
+						globalVariable.curentStage = 0;
+
+						break;
+					}
+				}
+				
 				stageController(sub_menu);
 				objectsController.createLevelOptions(globalVariable.getLevel());
 			}
