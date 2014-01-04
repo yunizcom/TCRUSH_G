@@ -64,7 +64,6 @@ public class objectsController {
 	
 	public void createLevelOptions(int curLevel){
 		level_list.removeAllViewsInLayout();
-		System.gc();
 
 		curGloLevel = curLevel;
 		
@@ -153,6 +152,8 @@ public class objectsController {
 	        }
 	    }, 500);
 
+		System.gc();
+		
 	}
 	
 	private void gotoCurrentLevel(int level){
@@ -171,6 +172,31 @@ public class objectsController {
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground_linear(LinearLayout thisStage, String fileName){
+
+		try 
+		{
+			InputStream ims = myActivity.getAssets().open(fileName);
+		    Drawable d = Drawable.createFromStream(ims, null);
+		    
+		    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		    	thisStage.setBackgroundDrawable(d);
+		    } else {
+		    	thisStage.setBackground(d);
+		    }
+		    
+		    ims = null;
+		    d = null;
+
+		}
+		catch(IOException ex) 
+		{
+		    return;
+		}
+		
+	}
+	
+	@SuppressLint("NewApi")
+	public void setStageBackground_scrollView(ScrollView thisStage, String fileName){
 
 		try 
 		{

@@ -32,7 +32,7 @@ public class popupBox {
 	private Context myContext;
 	private Activity myActivity;
 	
-	private RelativeLayout popbox, slashScreen, mainMenu, sub_menu, gameStage;
+	private RelativeLayout popbox, slashScreen, mainMenu, sub_menu, gameStage, leaderBoard;
 	private LinearLayout popboxCenter,popboxResult;
 	private ImageView popboxOK_btn,popbox_trophy,ic_popbox_close,ic_fb_share,ic_submit_button;
 	private TextView popboxMSG,popboxResultPts,popboxResultLvl2,popboxResultLvl,popboxResultPts2;
@@ -70,6 +70,7 @@ public class popupBox {
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
+		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
 		
 		setStageBackground_relative(popbox,"backgrounds/opacity_50_bg.png");
 		setStageBackground_linear(popboxCenter,"backgrounds/popUp_bg.png");
@@ -329,11 +330,13 @@ public class popupBox {
 		mainMenu.setVisibility(View.INVISIBLE);
 		sub_menu.setVisibility(View.INVISIBLE);
 		gameStage.setVisibility(View.INVISIBLE);
+		leaderBoard.setVisibility(View.INVISIBLE);
 		
 		slashScreen.setClickable(false);
 		mainMenu.setClickable(false);
 		sub_menu.setClickable(false);
 		gameStage.setClickable(false);
+		leaderBoard.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
 		thisStage.setClickable(true);

@@ -32,7 +32,7 @@ public class gameEngine extends Activity {
 	private Activity myActivity;
 	
 	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores;
-	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
+	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage,leaderBoard;
 	private LinearLayout gameObjects;
 	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
 	
@@ -94,6 +94,7 @@ public class gameEngine extends Activity {
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
 		gameObjects = (LinearLayout) myActivity.findViewById(R.id.gameObjects);
+		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
 		
 		initAllKeysPress();
 	}
@@ -424,11 +425,13 @@ public class gameEngine extends Activity {
 		mainMenu.setVisibility(View.INVISIBLE);
 		sub_menu.setVisibility(View.INVISIBLE);
 		gameStage.setVisibility(View.INVISIBLE);
+		leaderBoard.setVisibility(View.INVISIBLE);
 		
 		slashScreen.setClickable(false);
 		mainMenu.setClickable(false);
 		sub_menu.setClickable(false);
 		gameStage.setClickable(false);
+		leaderBoard.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
 		thisStage.setClickable(true);

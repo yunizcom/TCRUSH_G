@@ -1,37 +1,35 @@
 package com.mooStan.typingcrush;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.apache.http.NameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
@@ -58,10 +56,11 @@ public class initSetup {
 	private int screenWidth = 0, screenHeight = 0, sdk = 0;
 	private boolean smallScreen = false;
 	
-	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage;
-	private LinearLayout keypadBg;
+	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage, leaderBoard;
+	private LinearLayout keypadBg, scores_list;
+	private ScrollView leaderBoardList;
 	
-	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn;
+	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right;
 	
 	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores;
 
@@ -112,13 +111,19 @@ public class initSetup {
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
+		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
 		
 		keypadBg = (LinearLayout) myActivity.findViewById(R.id.keypadBg);
+		scores_list = (LinearLayout) myActivity.findViewById(R.id.scores_list);
+		leaderBoardList = (ScrollView) myActivity.findViewById(R.id.leaderBoardList);
 		
 		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
 		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
 		ic_continue_btn = (ImageView) myActivity.findViewById(R.id.ic_continue_btn);
+		ic_gomenu = (ImageView) myActivity.findViewById(R.id.ic_gomenu);
+		ic_navi_left = (ImageView) myActivity.findViewById(R.id.ic_navi_left);
+		ic_navi_right = (ImageView) myActivity.findViewById(R.id.ic_navi_right);
 		
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
@@ -134,6 +139,7 @@ public class initSetup {
 		stageController(slashScreen);
 		objectsController.setStageBackground(slashScreen,"backgrounds/slashScreen.jpg");
 		objectsController.setStageBackground_linear(keypadBg,"backgrounds/keypad_bg.png");
+		objectsController.setStageBackground_scrollView(leaderBoardList,"backgrounds/leaderBoard_bg.png");
 		globalVariable.curentStage = 0;
 		
 		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
@@ -180,11 +186,13 @@ public class initSetup {
 		mainMenu.setVisibility(View.INVISIBLE);
 		sub_menu.setVisibility(View.INVISIBLE);
 		gameStage.setVisibility(View.INVISIBLE);
+		leaderBoard.setVisibility(View.INVISIBLE);
 		
 		slashScreen.setClickable(false);
 		mainMenu.setClickable(false);
 		sub_menu.setClickable(false);
 		gameStage.setClickable(false);
+		leaderBoard.setClickable(false);
 		
 		thisStage.setVisibility(View.VISIBLE);
 		thisStage.setClickable(true);
@@ -230,7 +238,12 @@ public class initSetup {
 		            case MotionEvent.ACTION_UP:{
 		            	trophy_btn.setAlpha(255);
 		            	
-		            	retreiveLeaderBoard(1,1);
+		            	stageController(leaderBoard);
+		            	objectsController.setStageBackground(leaderBoard,"backgrounds/sub_menu.jpg");
+		            	globalVariable.curentStage = 2;
+		            	
+		            	//globalVariable.curResultPageNo = 1;
+		            	retreiveLeaderBoard(globalVariable.curResultPageNo,1);
 
 		                break;
 		            }
@@ -288,16 +301,91 @@ public class initSetup {
 	            return true;
 	        }
 	    });
+	    
+	    ic_gomenu.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_gomenu.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_gomenu.setAlpha(255);
+		            	
+		            	globalVariable.curentStage = 1;
+						stageController(mainMenu);
+						objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_navi_left.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_navi_left.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_navi_left.setAlpha(255);
+		            	
+		            	globalVariable.curResultPageNo++;
+		            	retreiveLeaderBoard(globalVariable.curResultPageNo,1);
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_navi_right.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_navi_right.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_navi_right.setAlpha(255);
+		            	
+		            	globalVariable.curResultPageNo--;
+		            	if(globalVariable.curResultPageNo < 1){
+		            		globalVariable.curResultPageNo = 1;
+		            	}
+		            	
+		            	retreiveLeaderBoard(globalVariable.curResultPageNo,1);
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
     }
 
     public void retreiveLeaderBoard(int page,int level){
+    	globalVariable.curResultPageNo = page;
 		popupBox.showPopBox("\n\nProcessing, please hold on...",3);
 		
 		trophy_btn.postDelayed(new Runnable() {
 	        @Override
 	        public void run() {
         	
-	        	gameScoresAPI("2");
+	        	gameScoresAPI(globalVariable.curResultPageNo);
 
 	        }
 	    }, 1000);
@@ -305,7 +393,81 @@ public class initSetup {
 		
 	}
 
-	public void gameScoresAPI(String pages){
+    public void generateScoreBoard(JSONArray jsoncontacts){
+    	if(jsoncontacts.length() == 0 && globalVariable.curResultPageNo > 1){
+    		globalVariable.curResultPageNo = 1;
+			popupBox.showPopBox("This is the last page of Leader Board.",0);
+		}else{
+
+			scores_list.removeAllViewsInLayout();
+			
+			for(int i=0;i < jsoncontacts.length();i++){						
+				
+	        	try {
+					JSONObject e = jsoncontacts.getJSONObject(i);
+					
+					if(e.getString("no") != "0" && e.getString("no").length() > 0){
+						//pushScoreToBoard((i+1), e.getString("no"), e.getString("n"), e.getString("s"));
+						
+						LinearLayout levelBox = new LinearLayout(myActivity);
+						LinearLayout levelDetails = new LinearLayout(myActivity);
+						TextView levelText = new TextView(myActivity);
+						TextView scoresText = new TextView(myActivity);
+					
+						levelBox.setGravity(Gravity.LEFT);
+						levelDetails.setOrientation(LinearLayout.VERTICAL);
+						
+						levelBox.setLayoutParams(new
+							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						levelDetails.setLayoutParams(new
+							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						levelText.setLayoutParams(new
+							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						scoresText.setLayoutParams(new
+							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						
+						Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
+						levelText.setTypeface(tf);
+						levelText.setTextSize(22);
+						levelText.setPadding(20, 10, 20, 0);
+						
+						levelText.setText(e.getString("no") + ") " + e.getString("n"));
+						
+						scoresText.setTypeface(tf);
+						scoresText.setTextSize(22);
+						scoresText.setPadding(20, 10, 20, 10);
+						scoresText.setGravity(Gravity.CENTER);
+						
+						scoresText.setText(e.getString("s") + " pts");
+						
+						
+						levelText.setTextColor(Color.parseColor("#d80606"));
+						scoresText.setTextColor(Color.parseColor("#212121"));
+	
+						levelDetails.addView(levelText);
+						levelDetails.addView(scoresText);
+						
+						levelBox.setId(i);
+						levelBox.addView(levelDetails);
+						
+						scores_list.addView(levelBox);
+						
+					}
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        	
+			}
+			
+			leaderBoardList.smoothScrollTo(0, 0);
+			
+			System.gc();
+		}
+    }
+    
+	public void gameScoresAPI(int pages){
 		String url = globalVariable.gameServerAPI_URL + "?mod=2&page=" + pages;
 		//-------load JSON
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -318,8 +480,7 @@ public class initSetup {
 			if(json == null){
 				popupBox.showPopBox("You need a smooth internet connection to retrieve LeaderBoard.",0);
 			}else{
-				Log.v("debug",json.getString("breakRecords"));
-				//loadBoard(json.getJSONArray("hallOfFame"));
+				generateScoreBoard(json.getJSONArray("hallOfFame"));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

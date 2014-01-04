@@ -4,12 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,7 +24,7 @@ import android.util.Log;
 public class GlobalVars extends Application {
 	public static final String PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores", gameServerAPI_URL = "http://www.yuniz.com/apps/tyc/";
 	public boolean isBlockOpen = false, isResultOpen = false, isPopUpOpen = false, stopCounter = false;
-	public int minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
+	public int curResultPageNo = 1,minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
 	public String curTypedWord;
 	public String[] currentLevelChallenge;
 	public MediaPlayer bgMusic = new MediaPlayer(), shortMusic = new MediaPlayer(), objMusic = new MediaPlayer();
