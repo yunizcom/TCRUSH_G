@@ -2,6 +2,14 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,11 +18,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -174,7 +179,7 @@ public class popupBox {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_submit_button.setAlpha(255);
 		            	
-
+		            	submitScore();
 		            	
 		                break;
 		            }
@@ -189,6 +194,7 @@ public class popupBox {
     	popbox.setClickable(false);
     	globalVariable.isPopUpOpen = false;
     	globalVariable.isResultOpen = false;
+    	globalVariable.isBlockOpen = false;
 	}
 	
 	public void showPopBox(String msg, int cboxType){
@@ -206,6 +212,8 @@ public class popupBox {
 		switch(boxType){
 			case 0:{
 				popboxCenter.setVisibility(View.VISIBLE);
+				
+				popboxOK_btn.setVisibility(View.VISIBLE);
 				
 				globalVariable.isPopUpOpen = true;
 				break;
@@ -252,6 +260,14 @@ public class popupBox {
 				ic_popbox_close.setVisibility(View.VISIBLE);
 				
 				globalVariable.isResultOpen = true;
+				break;
+			}
+			case 3:{
+				popboxCenter.setVisibility(View.VISIBLE);
+				
+				popboxOK_btn.setVisibility(View.INVISIBLE);
+				
+				globalVariable.isBlockOpen = true;
 				break;
 			}
 		}
@@ -327,9 +343,68 @@ public class popupBox {
 	
 	private void updateResultBoard(int level, int scores){
 		level_list.removeViewAt((level - 1));
+
+	}
+	
+	private void submitScore(){
+		closePopBox();
+		showPopBox("\n\nProcessing, please hold on...",3);
 		
+		popboxOK_btn.postDelayed(new Runnable() {
+	        @Override
+	        public void run() {
+        	
+	        	gameScoreSubmitAPI(globalVariable.getPlayerName(),globalVariable.scores);
+
+	        }
+	    }, 1000);
 		
+	}
+	
+	private void gameScoreSubmitAPI(String nickname, int scores){
+		try {
+			nickname = URLEncoder.encode(nickname, "utf-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String url = globalVariable.gameServerAPI_URL + "?mod=1&nickname=" + nickname + "&score=" + scores;
+		//-------load JSON
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        //nameValuePairs.add(new BasicNameValuePair("convo_id", "4546db1fd1"));
+        //nameValuePairs.add(new BasicNameValuePair("say", words));
+
+		JSONObject json = globalVariable.getJSONfromURL(url, nameValuePairs);
 		
+		closePopBox();
+		showPopBox("\n\nScore successfully submitted.",3);
+		
+		popboxOK_btn.postDelayed(new Runnable() {
+	        @Override
+	        public void run() {
+        	
+	        	closePopBox();
+	        	showPopBox("",1);
+
+	        }
+	    }, 1000);
+		
+		try {
+			if(json == null){
+				showPopBox("You need a smooth internet connection to submit scores.",0);
+			}else{
+				//curPosistion = json.getString("curPosistion");
+				//curPage = json.getString("curPage");
+				//breakRecords = json.getString("breakRecords");
+				Log.v("debug",json.getString("breakRecords"));
+				//loadBoard(json.getJSONArray("hallOfFame"));
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//-------load JSON
 	}
 	
 }

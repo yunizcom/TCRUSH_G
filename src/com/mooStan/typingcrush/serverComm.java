@@ -10,7 +10,7 @@ public class serverComm {
 
 	private Context myContext;
 	private Activity myActivity;
-	
+
 	public popupBox popupBox;
 
 	serverComm(Context context, Activity myActivityReference) {
@@ -22,7 +22,7 @@ public class serverComm {
 	
 	public void checkInternetConnection(){
 		if(!isNetworkAvailable()){
-			popupBox.showPopBox("You need a smooth internet connection to submit scores.",0);
+			popupBox.showPopBox("You need a smooth internet connection to connect LeaderBaord.",0);
 		}
 	}
 	
@@ -32,5 +32,4 @@ public class serverComm {
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
-	
 }

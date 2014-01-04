@@ -2,14 +2,18 @@ package com.mooStan.typingcrush;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -226,6 +230,8 @@ public class initSetup {
 		            case MotionEvent.ACTION_UP:{
 		            	trophy_btn.setAlpha(255);
 		            	
+		            	retreiveLeaderBoard(1,1);
+
 		                break;
 		            }
 	            }
@@ -284,12 +290,48 @@ public class initSetup {
 	    });
     }
 
-    
+    public void retreiveLeaderBoard(int page,int level){
+		popupBox.showPopBox("\n\nProcessing, please hold on...",3);
+		
+		trophy_btn.postDelayed(new Runnable() {
+	        @Override
+	        public void run() {
+        	
+	        	gameScoresAPI("2");
+
+	        }
+	    }, 1000);
+		
+		
+	}
+
+	public void gameScoresAPI(String pages){
+		String url = globalVariable.gameServerAPI_URL + "?mod=2&page=" + pages;
+		//-------load JSON
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        //nameValuePairs.add(new BasicNameValuePair("convo_id", "4546db1fd1"));
+        //nameValuePairs.add(new BasicNameValuePair("say", words));
+		
+		JSONObject json = globalVariable.getJSONfromURL(url, nameValuePairs);
+		popupBox.closePopBox();
+		try {
+			if(json == null){
+				popupBox.showPopBox("You need a smooth internet connection to retrieve LeaderBoard.",0);
+			}else{
+				Log.v("debug",json.getString("breakRecords"));
+				//loadBoard(json.getJSONArray("hallOfFame"));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//-------load JSON
+	}
     
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 
-		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false){
+		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false && globalVariable.isBlockOpen == false){
 
 			if(globalVariable.curentStage < 0){
 				globalVariable.curentStage = 0;
@@ -321,30 +363,32 @@ public class initSetup {
 				}
 			}
 		}else{
-			if(globalVariable.isResultOpen == true){
-
-				switch(globalVariable.curentStage){
-					case 2 : {
-						globalVariable.curentStage = 1;
-
-						break;
+			if(globalVariable.isBlockOpen == false){
+				if(globalVariable.isResultOpen == true){
+	
+					switch(globalVariable.curentStage){
+						case 2 : {
+							globalVariable.curentStage = 1;
+	
+							break;
+						}
+						case 3 : {
+							globalVariable.curentStage = 2;
+	
+							break;
+						}
+						case 1 : {
+							globalVariable.curentStage = 0;
+	
+							break;
+						}
 					}
-					case 3 : {
-						globalVariable.curentStage = 2;
-
-						break;
-					}
-					case 1 : {
-						globalVariable.curentStage = 0;
-
-						break;
-					}
+					
+					stageController(sub_menu);
+					objectsController.createLevelOptions(globalVariable.getLevel());
 				}
-				
-				stageController(sub_menu);
-				objectsController.createLevelOptions(globalVariable.getLevel());
+				popupBox.closePopBox();
 			}
-			popupBox.closePopBox();
 		}
 	}
 	
