@@ -70,13 +70,13 @@ public final class R {
         public static final int ic_trophy_game_stage=0x7f02002e;
     }
     public static final class id {
-        public static final int action_settings=0x7f080043;
+        public static final int action_settings=0x7f080044;
         public static final int boardPlate=0x7f08000b;
         public static final int fb_fanpage_btn=0x7f080002;
         public static final int gameObjects=0x7f080012;
         public static final int gameStage=0x7f080011;
         public static final int ic_continue_btn=0x7f080007;
-        public static final int ic_fb_share=0x7f08003f;
+        public static final int ic_fb_share=0x7f080040;
         public static final int ic_gomenu=0x7f08000c;
         public static final int ic_key_a=0x7f080024;
         public static final int ic_key_b=0x7f080031;
@@ -108,9 +108,9 @@ public final class R {
         public static final int ic_navi_left=0x7f08000f;
         public static final int ic_navi_right=0x7f080010;
         public static final int ic_play_btn=0x7f080004;
-        public static final int ic_popbox_close=0x7f080042;
+        public static final int ic_popbox_close=0x7f080043;
         public static final int ic_popbox_egg=0x7f08003c;
-        public static final int ic_submit_button=0x7f080040;
+        public static final int ic_submit_button=0x7f080041;
         public static final int ic_time_bar=0x7f080018;
         public static final int ic_trophy_game_scores=0x7f080017;
         public static final int ic_trophy_game_stage=0x7f080016;
@@ -121,6 +121,7 @@ public final class R {
         public static final int level_list=0x7f080009;
         public static final int linearLayout1=0x7f080006;
         public static final int mainMenu=0x7f080001;
+        public static final int mynickName=0x7f08003f;
         public static final int popbox=0x7f080035;
         public static final int popboxCenter=0x7f080036;
         public static final int popboxMSG=0x7f080037;
@@ -130,7 +131,7 @@ public final class R {
         public static final int popboxResultLvl2=0x7f08003a;
         public static final int popboxResultPts=0x7f08003e;
         public static final int popboxResultPts2=0x7f08003d;
-        public static final int popbox_trophy=0x7f080041;
+        public static final int popbox_trophy=0x7f080042;
         public static final int scores_list=0x7f08000e;
         public static final int scrollList=0x7f080008;
         public static final int slashScreen=0x7f080000;

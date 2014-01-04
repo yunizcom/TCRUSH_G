@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ public class popupBox {
 	private ImageView popboxOK_btn,popbox_trophy,ic_popbox_close,ic_fb_share,ic_submit_button;
 	private TextView popboxMSG,popboxResultPts,popboxResultLvl2,popboxResultLvl,popboxResultPts2;
 	private LinearLayout level_list;
+	private EditText mynickName;
 	
 	public soundsController soundsController;
 	private GlobalVars globalVariable;
@@ -65,6 +67,8 @@ public class popupBox {
 		ic_submit_button = (ImageView) myActivity.findViewById(R.id.ic_submit_button);
 		
 		level_list = (LinearLayout) myActivity.findViewById(R.id.level_list);
+		
+		mynickName = (EditText) myActivity.findViewById(R.id.mynickName);
 		
 		slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
@@ -96,6 +100,9 @@ public class popupBox {
 		popboxResultPts2.setTypeface(tf);
 		popboxResultPts2.setTextSize(50);
 		popboxResultPts2.setTextColor(Color.parseColor("#373737"));
+		
+		mynickName.setTypeface(tf);
+		mynickName.setTextSize(35);
 		
 		popboxOK_btn.setOnTouchListener(new View.OnTouchListener() {
 	        @Override
@@ -132,6 +139,8 @@ public class popupBox {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_popbox_close.setAlpha(255);
 
+		            	globalVariable.curentStage = 2;
+		            	
 		            	closePopBox();
 		            	
 		            	//updateResultBoard(globalVariable.currentLevels,200);
@@ -180,7 +189,16 @@ public class popupBox {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_submit_button.setAlpha(255);
 		            	
-		            	submitScore();
+		            	if(globalVariable.isEnterName == true){
+		            		if(mynickName.getText().toString().length() == 0){
+		            			mynickName.setText("New Player");
+		            		}
+		            		globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), mynickName.getText().toString(), globalVariable.getShare());
+		            		
+		            		submitScore();
+		            	}else{
+		            		showPopBox("",4);
+		            	}
 		            	
 		                break;
 		            }
@@ -196,6 +214,7 @@ public class popupBox {
     	globalVariable.isPopUpOpen = false;
     	globalVariable.isResultOpen = false;
     	globalVariable.isBlockOpen = false;
+    	globalVariable.isEnterName = false;
 	}
 	
 	public void showPopBox(String msg, int cboxType){
@@ -210,8 +229,15 @@ public class popupBox {
 		popbox_trophy.setVisibility(View.INVISIBLE);
 		ic_popbox_close.setVisibility(View.INVISIBLE);
 		
+		mynickName.setVisibility(View.INVISIBLE);
+		
+		globalVariable.isPopUpOpen = false;
+    	globalVariable.isResultOpen = false;
+    	globalVariable.isBlockOpen = false;
+    	globalVariable.isEnterName = false;
+		
 		switch(boxType){
-			case 0:{
+			case 0:{ // normal message prompt
 				popboxCenter.setVisibility(View.VISIBLE);
 				
 				popboxOK_btn.setVisibility(View.VISIBLE);
@@ -219,11 +245,14 @@ public class popupBox {
 				globalVariable.isPopUpOpen = true;
 				break;
 			}
-			case 1:{
+			case 1:{ // result shown
 				soundsController.shortSoundClip("sounds/splashScreen_sound.mp3");
 				
 				popboxResultLvl.setText("Level " + globalVariable.currentLevels);
 				popboxResultLvl2.setText("Level " + globalVariable.currentLevels);
+				
+				popboxResultPts.setVisibility(View.VISIBLE);
+				popboxResultPts2.setVisibility(View.VISIBLE);
 				
 				popboxResultPts.setText(globalVariable.scores + "\npoints");
 				popboxResultPts2.setText(globalVariable.scores + "\npoints");
@@ -238,11 +267,13 @@ public class popupBox {
 				globalVariable.isResultOpen = true;
 				break;
 			}
-			case 2:{
+			case 2:{ // score failed
 				soundsController.shortSoundClip("sounds/levelFailed.mp3");
 				
 				popboxResultLvl.setText("Level " + globalVariable.currentLevels + " FAILED");
 				popboxResultLvl2.setText("Level " + globalVariable.currentLevels + " FAILED");
+				popboxResultPts.setVisibility(View.VISIBLE);
+				popboxResultPts2.setVisibility(View.VISIBLE);
 				
 				int topScore = Integer.valueOf(globalVariable.getSelectedYunizScores(globalVariable.currentLevels));
 				
@@ -250,8 +281,8 @@ public class popupBox {
 					popboxResultPts.setText("You need " + (topScore + 1) + " points");
 					popboxResultPts2.setText("You need " + (topScore + 1) + " points");
 				}else{
-					popboxResultPts.setText("You need " + (globalVariable.currentLevels * 10) + " points");
-					popboxResultPts2.setText("You need " + (globalVariable.currentLevels * 10) + " points");
+					popboxResultPts.setText("You need " + ((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) + " points");
+					popboxResultPts2.setText("You need " + ((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) + " points");
 				}
 				
 				ic_submit_button.setVisibility(View.INVISIBLE);
@@ -263,12 +294,33 @@ public class popupBox {
 				globalVariable.isResultOpen = true;
 				break;
 			}
-			case 3:{
+			case 3:{ // progress dialog
 				popboxCenter.setVisibility(View.VISIBLE);
 				
 				popboxOK_btn.setVisibility(View.INVISIBLE);
 				
 				globalVariable.isBlockOpen = true;
+				break;
+			}
+			case 4:{ // enter your name
+				popboxResultLvl.setText("Your Name ?");
+				popboxResultLvl2.setText("Your Name ?");
+				
+				popboxResultPts.setVisibility(View.INVISIBLE);
+				popboxResultPts2.setVisibility(View.INVISIBLE);
+				
+				ic_submit_button.setVisibility(View.VISIBLE);
+				ic_fb_share.setVisibility(View.INVISIBLE);
+				
+				mynickName.setVisibility(View.VISIBLE);
+				mynickName.setText(globalVariable.getPlayerName());
+				
+				popbox_trophy.setVisibility(View.VISIBLE);
+				
+				popboxResult.setVisibility(View.VISIBLE);
+				ic_popbox_close.setVisibility(View.VISIBLE);
+				
+				globalVariable.isEnterName = true;
 				break;
 			}
 		}
@@ -371,7 +423,7 @@ public class popupBox {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String url = globalVariable.gameServerAPI_URL + "?mod=1&nickname=" + nickname + "&score=" + scores;
+		String url = globalVariable.gameServerAPI_URL + "?mod=1&nickname=" + nickname + "&score=" + scores + "&uid=" + globalVariable.getmyUID() + "&levels=" + globalVariable.currentLevels;
 		//-------load JSON
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         //nameValuePairs.add(new BasicNameValuePair("convo_id", "4546db1fd1"));

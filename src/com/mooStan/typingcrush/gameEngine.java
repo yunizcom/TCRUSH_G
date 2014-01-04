@@ -309,7 +309,7 @@ public class gameEngine extends Activity {
 			
 			popupBox.showPopBox("",2);
 			
-		}else if(globalVariable.scores < (globalVariable.currentLevels * 10)){
+		}else if(globalVariable.scores < ((globalVariable.currentLevels * 10) + globalVariable.currentLevels)){
 			
 			popupBox.showPopBox("",2);
 			

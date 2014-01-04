@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -22,12 +24,58 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 public class GlobalVars extends Application {
-	public static final String PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores", gameServerAPI_URL = "http://www.yuniz.com/apps/tyc/";
-	public boolean isBlockOpen = false, isResultOpen = false, isPopUpOpen = false, stopCounter = false;
-	public int curResultPageNo = 1,minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
+	public static final String PREFS_UID = "YunizUID", PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores", gameServerAPI_URL = "http://www.yuniz.com/apps/tyc/";
+	public boolean isEnterName = false, isBlockOpen = false, isResultOpen = false, isPopUpOpen = false, stopCounter = false;
+	public int curResultLevels = 0,curResultPageNo = 1,minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0;
 	public String curTypedWord;
 	public String[] currentLevelChallenge;
 	public MediaPlayer bgMusic = new MediaPlayer(), shortMusic = new MediaPlayer(), objMusic = new MediaPlayer();
+	
+	public void saveYunizUID(){ // usage : saveYunizUID(10);
+		  String uid = newUID();
+		  SharedPreferences settings = this.getSharedPreferences(PREFS_UID, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putString("myUID", uid);
+
+	      editor.commit();
+	}
+	
+	public JSONObject retriveUID() throws JSONException{ // usage : retriveUID().getString("myUID")
+		String returnString = "";
+		SharedPreferences settings = this.getSharedPreferences(PREFS_UID, 0);
+		returnString = "{'myUID' : " + settings.getString("myUID","")  + "}";
+		
+		JSONObject json = new JSONObject(returnString);
+
+		return json;
+	}
+	
+	public String getmyUID(){
+		String curValue = "";
+		
+		try {
+			curValue = retriveUID().getString("myUID");
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return curValue;
+	}
+	
+	private String newUID(){
+		int min = 111111,max = 999999;
+		Long curTS = System.currentTimeMillis()/1000;
+		Random r = new Random();
+    	int i1 = r.nextInt(max - min + 1) + min;
+    	
+    	String ts = curTS.toString()+"-"+i1;
+    	
+    	return ts;
+	}
 	
     public void saveYunizSaved(int level, int bombs, String playername, int shares){ // usage : saveYunizSaved(10, 2, "Stanly", 1);
 		  SharedPreferences settings = this.getSharedPreferences(PREFS_SETTINGS, 0);
@@ -105,7 +153,11 @@ public class GlobalVars extends Application {
 		if(levelScores.length < index){
 			return "0";
 		}else{
-			return levelScores[(index - 1)];
+			if(levelScores[(index - 1)].length() > 0){
+				return levelScores[(index - 1)];
+			}else{
+				return "0";
+			}
 		}
 	}
 	

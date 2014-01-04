@@ -609,6 +609,22 @@
 			                android:ems="10"
 			                android:text="3000\npoints"
 			                android:gravity="center_vertical|center_horizontal" />
+		                
+		                <EditText
+				            android:id="@+id/mynickName"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:layout_centerHorizontal="true"
+				            android:layout_marginTop="20dp"
+				            android:ems="5"
+				            android:hint="type your name"
+				            android:textColor="#333333"
+				            android:textColorHint="#ccc"
+				            android:background="#fff"
+				            android:gravity="center"
+				            android:maxLength="15"
+				            android:maxLines="3"
+				            android:textSize="20dp" />
 	                
 	                </RelativeLayout>   
 	                

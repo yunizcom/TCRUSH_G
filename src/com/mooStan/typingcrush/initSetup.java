@@ -132,6 +132,10 @@ public class initSetup {
 	    
 		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
 		
+		if(globalVariable.getmyUID() == ""){
+			globalVariable.saveYunizUID();
+		}
+		
 	    uiSetup();
 	}
 
@@ -178,7 +182,6 @@ public class initSetup {
 	    	    }, 2000);
 	        }
 	    }, 500);
-		
 	}
 	
 	private void stageController(RelativeLayout thisStage){
@@ -385,7 +388,7 @@ public class initSetup {
 	        @Override
 	        public void run() {
         	
-	        	gameScoresAPI(globalVariable.curResultPageNo);
+	        	gameScoresAPI(globalVariable.curResultPageNo, globalVariable.curResultLevels);
 
 	        }
 	    }, 1000);
@@ -467,8 +470,8 @@ public class initSetup {
 		}
     }
     
-	public void gameScoresAPI(int pages){
-		String url = globalVariable.gameServerAPI_URL + "?mod=2&page=" + pages;
+	public void gameScoresAPI(int pages, int levels){
+		String url = globalVariable.gameServerAPI_URL + "?mod=2&page=" + pages + "&levels=" + levels;
 		//-------load JSON
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         //nameValuePairs.add(new BasicNameValuePair("convo_id", "4546db1fd1"));
@@ -492,7 +495,7 @@ public class initSetup {
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 
-		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false && globalVariable.isBlockOpen == false){
+		if(globalVariable.isPopUpOpen == false && globalVariable.isResultOpen == false && globalVariable.isBlockOpen == false && globalVariable.isEnterName == false){
 
 			if(globalVariable.curentStage < 0){
 				globalVariable.curentStage = 0;
@@ -525,6 +528,7 @@ public class initSetup {
 			}
 		}else{
 			if(globalVariable.isBlockOpen == false){
+				
 				if(globalVariable.isResultOpen == true){
 	
 					switch(globalVariable.curentStage){
@@ -547,8 +551,15 @@ public class initSetup {
 					
 					stageController(sub_menu);
 					objectsController.createLevelOptions(globalVariable.getLevel());
+					
+					popupBox.closePopBox();
+				}else if(globalVariable.isEnterName == true){
+					popupBox.closePopBox();
+					
+					popupBox.showPopBox("",1);
+				}else if(globalVariable.isPopUpOpen == true){
+					popupBox.closePopBox();
 				}
-				popupBox.closePopBox();
 			}
 		}
 	}
