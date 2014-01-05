@@ -297,7 +297,7 @@ public class popupBox extends Activity {
 		            }
 		        });
 		        Bundle postParams = request.getParameters(); // <-- THIS IS IMPORTANT
-		        postParams.putString("name", message + " Install and join me at TYPING CRUSH https://www.yuniz.com #typingcrush #typingcrushlevel" + globalVariable.currentLevels);
+		        postParams.putString("name", message + " Install and join me at TYPING CRUSH http://goo.gl/zcBrSS #typingcrush #typingcrushlevel" + globalVariable.currentLevels);
 		        request.setParameters(postParams);
 		        request.executeAsync();
 		        
