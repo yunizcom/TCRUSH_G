@@ -195,6 +195,8 @@ public class popupBox {
 		            		}
 		            		globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), mynickName.getText().toString(), globalVariable.getShare());
 		            		
+		            		globalVariable.submitClicked = true;
+		            		
 		            		submitScore();
 		            	}else{
 		            		showPopBox("",4);
@@ -253,11 +255,25 @@ public class popupBox {
 				
 				popboxResultPts.setVisibility(View.VISIBLE);
 				popboxResultPts2.setVisibility(View.VISIBLE);
-				
-				popboxResultPts.setText(globalVariable.scores + "\npoints");
-				popboxResultPts2.setText(globalVariable.scores + "\npoints");
-				
-				ic_submit_button.setVisibility(View.VISIBLE);
+
+				if(globalVariable.submitClicked == false){
+					ic_submit_button.setVisibility(View.VISIBLE);
+					
+					popboxResultPts.setTextSize(50);
+					popboxResultPts2.setTextSize(50);
+					
+					popboxResultPts.setText(globalVariable.scores + "\npoints");
+					popboxResultPts2.setText(globalVariable.scores + "\npoints");
+				}else{
+					ic_submit_button.setVisibility(View.INVISIBLE);
+					globalVariable.submitClicked = false;
+					
+					popboxResultPts.setTextSize(25);
+					popboxResultPts2.setTextSize(25);
+					
+					popboxResultPts.setText(globalVariable.scores + "\npoints\n\nWorld Rank\n#" + globalVariable.curSubmittedRank);
+					popboxResultPts2.setText(globalVariable.scores + "\npoints\n\nWorld Rank\n#" + globalVariable.curSubmittedRank);
+				}
 				ic_fb_share.setVisibility(View.VISIBLE);
 				
 				popboxResult.setVisibility(View.VISIBLE);
@@ -430,29 +446,42 @@ public class popupBox {
         //nameValuePairs.add(new BasicNameValuePair("say", words));
 
 		JSONObject json = globalVariable.getJSONfromURL(url, nameValuePairs);
-		
-		closePopBox();
-		showPopBox("\n\nScore successfully submitted.",3);
-		
-		popboxOK_btn.postDelayed(new Runnable() {
-	        @Override
-	        public void run() {
-        	
-	        	closePopBox();
-	        	showPopBox("",1);
 
-	        }
-	    }, 1000);
-		
 		try {
 			if(json == null){
-				showPopBox("You need a smooth internet connection to submit scores.",0);
+				closePopBox();
+				showPopBox("\n\nScore failed to submit, please try again.",3);
+				globalVariable.submitClicked = false;
+				
+				popboxOK_btn.postDelayed(new Runnable() {
+			        @Override
+			        public void run() {
+		        	
+			        	closePopBox();
+			        	showPopBox("",1);
+
+			        }
+			    }, 2000);
 			}else{
 				//curPosistion = json.getString("curPosistion");
 				//curPage = json.getString("curPage");
 				//breakRecords = json.getString("breakRecords");
-				Log.v("debug",json.getString("breakRecords"));
+				globalVariable.curSubmittedRank = json.getString("curPosistion");
 				//loadBoard(json.getJSONArray("hallOfFame"));
+				
+				closePopBox();
+				showPopBox("\n\nScore successfully submitted.",3);
+				
+				popboxOK_btn.postDelayed(new Runnable() {
+			        @Override
+			        public void run() {
+		        	
+			        	closePopBox();
+			        	showPopBox("",1);
+
+			        }
+			    }, 1000);
+				
 			}
 			
 		} catch (JSONException e) {

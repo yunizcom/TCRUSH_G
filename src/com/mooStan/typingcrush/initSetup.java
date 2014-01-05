@@ -441,7 +441,7 @@ public class initSetup {
 						scoresText.setPadding(20, 10, 20, 10);
 						scoresText.setGravity(Gravity.CENTER);
 						
-						scoresText.setText(e.getString("s") + " pts");
+						scoresText.setText(e.getString("s") + " pts @ lvl" + e.getString("l"));
 						
 						
 						levelText.setTextColor(Color.parseColor("#d80606"));
