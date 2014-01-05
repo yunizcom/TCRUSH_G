@@ -1,10 +1,13 @@
 package com.mooStan.typingcrush;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -14,24 +17,40 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsoluteLayout;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mooStan.typingcrush.R;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import com.mooStan.typingcrush.soundsController;
 
-public class popupBox {
+public class popupBox extends Activity {
 
 	private Context myContext;
 	private Activity myActivity;
+	
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private static final String PENDING_PUBLISH_KEY = "pendingPublishReauthorization";
+	private boolean pendingPublishReauthorization = false;
 	
 	private RelativeLayout popbox, slashScreen, mainMenu, sub_menu, gameStage, leaderBoard;
 	private LinearLayout popboxCenter,popboxResult;
@@ -39,6 +58,9 @@ public class popupBox {
 	private TextView popboxMSG,popboxResultPts,popboxResultLvl2,popboxResultLvl,popboxResultPts2;
 	private LinearLayout level_list;
 	private EditText mynickName;
+	
+	public Bitmap fbImg;
+	public String fbMsg;
 	
 	public soundsController soundsController;
 	private GlobalVars globalVariable;
@@ -167,7 +189,10 @@ public class popupBox {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_fb_share.setAlpha(255);
 		            	
-
+		            	RelativeLayout myview = (RelativeLayout) myActivity.findViewById(R.id.myview);
+		        		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + "! How about you? ");
+		            	
+		            	//publishStory();
 		            	
 		                break;
 		            }
@@ -209,6 +234,110 @@ public class popupBox {
 	        }
 	    });
 	}
+	
+	/* for FB SDK */
+	  public static Bitmap loadBitmapFromView_BITMAP(View v) {
+		    Bitmap bitmap;
+			View v1 = v.getRootView();
+			v1.setDrawingCacheEnabled(true);
+			bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+
+			bitmap=Bitmap.createScaledBitmap(bitmap, (int)(bitmap.getWidth() * 1), (int)(bitmap.getHeight() * 1), true);
+			v1.setDrawingCacheEnabled(false);
+			
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+			
+			 return bitmap;
+		}
+	  
+	    public void publishPhoto(Bitmap imgData, String message) {
+	    	fbImg = imgData;
+	    	fbMsg = message;
+			Session session = Session.getActiveSession();
+				
+		    if (session != null){//Log.v("DEBUG","FB session 2 : " + session + " | " + session.isOpened());
+
+		        // Check for publish permissions    
+		        List<String> permissions = session.getPermissions();
+		        if (!isSubsetOf(PERMISSIONS, permissions)) {
+		            pendingPublishReauthorization = true;
+		            Session.NewPermissionsRequest newPermissionsRequest = new Session
+		                    .NewPermissionsRequest(myActivity, PERMISSIONS);
+		        session.requestNewPublishPermissions(newPermissionsRequest);
+		            return;
+		        }else{
+		        	closePopBox();
+		    		showPopBox("\n\nUploading, please hold \non...",3);
+		        }
+
+		        Request request = Request.newUploadPhotoRequest(session, imgData, new Request.Callback()
+		        {
+		            @Override
+		            public void onCompleted(Response response)
+		            {
+		            	//Log.v("DEBUG","DONE UPLOAD : " + response);
+		            	closePopBox();
+						showPopBox("\n\nScore has been successfully shared on your Facebook wall.",3);
+						
+						popboxOK_btn.postDelayed(new Runnable() {
+					        @Override
+					        public void run() {
+				        	
+					        	closePopBox();
+					        	showPopBox("",1);
+
+					        }
+					    }, 2000);
+		            }
+		        });
+		        Bundle postParams = request.getParameters(); // <-- THIS IS IMPORTANT
+		        postParams.putString("name", message + " Install and join me at TYPING CRUSH https://www.yuniz.com/");
+		        request.setParameters(postParams);
+		        request.executeAsync();
+		        
+		    }else{
+		    	Session.openActiveSession(myActivity, true, new Session.StatusCallback() {
+		    		
+				    // callback when session changes state
+				    @SuppressWarnings("deprecation")
+					@Override
+				    public void call(Session session, SessionState state, Exception exception) {
+						//Log.v("DEBUG","FB session : " + session + " | " + session.isOpened());	
+				    	if (session.isOpened()) {
+				    		publishPhoto(fbImg,fbMsg);
+				    		/*// make request to the /me API
+				    		Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+				    		  // callback after Graph API response with user object
+				    		  @Override
+				    		  public void onCompleted(GraphUser user, Response response) {
+				    			  
+				    			  if (user != null) {
+				    				  //TextView welcome = (TextView) findViewById(R.id.welcome);
+										Log.v("DEBUG","LOGIN FB : " + user + " | " + response);
+				    				}
+				    			  
+				    		  }
+				    		});*/
+				    		
+				    	}
+				    	
+				    }
+				  });
+		    }
+
+		}
+
+	    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+		    for (String string : subset) {
+		        if (!superset.contains(string)) {
+		            return false;
+		        }
+		    }
+		    return true;
+		}
+	/* for FB SDK */  
 	
 	public void closePopBox(){
 		popbox.setVisibility(View.INVISIBLE);

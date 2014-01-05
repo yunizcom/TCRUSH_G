@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.app.Activity;
+import android.content.Intent;
+
+import com.facebook.Session;
 import com.mooStan.typingcrush.initSetup;
 import com.mooStan.typingcrush.soundsController;
 
@@ -27,6 +30,12 @@ public class TypingCrush extends Activity {
 		initSetup.basicDetection();
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	}
+	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		// TODO Auto-generated method stub
