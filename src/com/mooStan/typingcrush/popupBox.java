@@ -164,7 +164,7 @@ public class popupBox extends Activity {
 		            	globalVariable.curentStage = 2;
 		            	
 		            	closePopBox();
-		            	
+		            	globalVariable.submitClicked = false;
 		            	//updateResultBoard(globalVariable.currentLevels,200);
 		            	
 		            	stageController(mainMenu);
@@ -190,7 +190,12 @@ public class popupBox extends Activity {
 		            	ic_fb_share.setAlpha(255);
 		            	
 		            	RelativeLayout myview = (RelativeLayout) myActivity.findViewById(R.id.myview);
-		        		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + "! How about you? ");
+		            	if(globalVariable.submitClicked == false){
+		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + "! How about you? ");
+		            	}else{
+		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + " and #" + globalVariable.curSubmittedRank + " at the World Ranking! How about you? ");
+		            	}
+		        		
 		            	
 		            	//publishStory();
 		            	
@@ -292,7 +297,7 @@ public class popupBox extends Activity {
 		            }
 		        });
 		        Bundle postParams = request.getParameters(); // <-- THIS IS IMPORTANT
-		        postParams.putString("name", message + " Install and join me at TYPING CRUSH https://www.yuniz.com/");
+		        postParams.putString("name", message + " Install and join me at TYPING CRUSH https://www.yuniz.com #typingcrush #typingcrushlevel" + globalVariable.currentLevels);
 		        request.setParameters(postParams);
 		        request.executeAsync();
 		        
@@ -395,7 +400,6 @@ public class popupBox extends Activity {
 					popboxResultPts2.setText(globalVariable.scores + "\npoints");
 				}else{
 					ic_submit_button.setVisibility(View.INVISIBLE);
-					globalVariable.submitClicked = false;
 					
 					popboxResultPts.setTextSize(25);
 					popboxResultPts2.setTextSize(25);

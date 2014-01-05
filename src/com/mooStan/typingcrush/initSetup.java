@@ -551,7 +551,7 @@ public class initSetup {
 					
 					stageController(sub_menu);
 					objectsController.createLevelOptions(globalVariable.getLevel());
-					
+					globalVariable.submitClicked = false;
 					popupBox.closePopBox();
 				}else if(globalVariable.isEnterName == true){
 					popupBox.closePopBox();
