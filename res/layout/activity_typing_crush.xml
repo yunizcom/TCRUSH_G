@@ -438,6 +438,12 @@
                 android:padding="3dp" >
 		        
                 <ImageView
+                android:id="@+id/ic_key_clr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="2dp"
+                android:src="@drawable/ic_key_clr" />
+                <ImageView
                 android:id="@+id/ic_key_z"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

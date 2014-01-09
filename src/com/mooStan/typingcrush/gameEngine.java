@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +35,7 @@ public class gameEngine extends Activity {
 	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage,leaderBoard;
 	private LinearLayout gameObjects;
-	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del;
+	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del,ic_key_clr;
 	
 	public soundsController soundsController;
 	public popupBox popupBox;
@@ -88,6 +89,7 @@ public class gameEngine extends Activity {
 		ic_key_n = (ImageView) myActivity.findViewById(R.id.ic_key_n);
 		ic_key_m = (ImageView) myActivity.findViewById(R.id.ic_key_m);
 		ic_key_del = (ImageView) myActivity.findViewById(R.id.ic_key_del);
+		ic_key_clr = (ImageView) myActivity.findViewById(R.id.ic_key_clr);
 		
 		slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
 		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
@@ -118,6 +120,7 @@ public class gameEngine extends Activity {
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
 
     	generateLevelChallenge(currentLevel, (50 + currentLevel));
+    	setBonuses();
     	globalVariable.currentLevels = currentLevel;
     	globalVariable.currentToDelayed = (int)(currentLevel / 2);
     	globalVariable.countDowns = (50 + currentLevel) * globalVariable.currentToDelayed;
@@ -172,7 +175,15 @@ public class gameEngine extends Activity {
 		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/GROBOLD.ttf");
 		levelText.setTypeface(tf);
 		levelText.setTextSize(20f);
-		levelText.setTextColor(Color.parseColor("#333333"));
+		
+		if(isStringArrayExist(globalVariable.bonus2,2,globalVariable.currentLevelChallenge[curObject],false)){
+			levelText.setTextColor(Color.parseColor("#f90606"));
+		}else if(isStringArrayExist(globalVariable.bonus1,1,globalVariable.currentLevelChallenge[curObject],false)){
+			levelText.setTextColor(Color.parseColor("#1f06f9"));
+		}else{
+			levelText.setTextColor(Color.parseColor("#333333"));
+		}
+
 		levelText.setPadding(paddings, 2, paddings, 2);
 		
 		levelText.setText(globalVariable.currentLevelChallenge[curObject]);
@@ -185,6 +196,75 @@ public class gameEngine extends Activity {
 			forfeitObject(0);
 		}
 		
+	}
+	
+	private boolean isStringArrayExist(String[] strArray, int type, String strCheck, boolean removeNow){
+
+		boolean val = false;
+		
+		switch(type){
+			case 1 : {
+				strArray = globalVariable.bonus1;
+			}
+			case 2 : {
+				strArray = globalVariable.bonus2;
+			}
+		}
+		
+		String[] arraylist = strArray;
+		List<String> list = new ArrayList<String>();
+		Collections.addAll(list, arraylist);
+		
+		globalVariable.currArrayBonusItemIndex = 0;
+Log.v("debug",strArray.length + "");		
+		for(String s : strArray)
+	    {
+	        if(strCheck.equals(s))
+	        {
+	        	if(removeNow == true){
+	        		list.remove(globalVariable.currArrayBonusItemIndex);
+	        	}
+	        	val = true;
+	        	break;
+	        }
+	        globalVariable.currArrayBonusItemIndex++;
+	    }
+
+		switch(type){
+			case 1 : {
+				globalVariable.bonus1 = list.toArray(new String[list.size()]);
+			}
+			case 2 : {
+				globalVariable.bonus2 = list.toArray(new String[list.size()]);
+			}
+		}
+		Log.v("debug",globalVariable.bonus2.length + " - " + globalVariable.bonus1.length);			
+		
+		return val;
+	}
+	
+	private void setBonuses(){
+		int randomTo = globalVariable.currentLevelChallenge.length - 10, totolBonus1 = randomNumber(2,(10 + globalVariable.currentLevels)), totolBonus2 = randomNumber(2,(5 + globalVariable.currentLevels));
+		globalVariable.bonus1 = new String[totolBonus1];
+		globalVariable.bonus2 = new String[totolBonus2];
+
+		for(int i=0;i<totolBonus1;i++){
+			globalVariable.bonus1[i] = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
+		}
+
+		for(int i=0;i<totolBonus2;i++){
+			//bonus2[i] = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
+			
+			String curStr = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
+			for(String s : globalVariable.bonus1)
+		    {
+		        if(!curStr.equals(s))
+		        {
+		        	globalVariable.bonus2[i] = curStr;
+		        	break;
+		        }
+		    }
+		}
 	}
 	
 	private void generateLevelChallenge(int difficulty, int totalList){
@@ -257,7 +337,15 @@ public class gameEngine extends Activity {
 				keyPadInputed.setText(globalVariable.curTypedWord);
 				gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex);
 				globalVariable.curShownObject--;
-				globalVariable.scores = globalVariable.scores + 1;
+				
+				if(isStringArrayExist(globalVariable.bonus2,2,curKeys,true)){
+					globalVariable.scores = globalVariable.scores + 3;
+				}else if(isStringArrayExist(globalVariable.bonus1,1,curKeys,true)){
+					globalVariable.scores = globalVariable.scores + 2;
+				}else{
+					globalVariable.scores = globalVariable.scores + 1;
+				}
+				
 				ic_trophy_game_scores.setText(globalVariable.scores + "");
 
 				if( globalVariable.currentLevelChallenge.length <= 9 ){
@@ -498,6 +586,8 @@ public class gameEngine extends Activity {
 			if(globalVariable.curTypedWord.length() > 0){
 				globalVariable.curTypedWord = globalVariable.curTypedWord.substring(0, globalVariable.curTypedWord.length() - 1);
 			}
+		}else if(keycode == "clr"){
+			globalVariable.curTypedWord = "";
 		}else{
 			globalVariable.curTypedWord = globalVariable.curTypedWord + keycode;
 		}
@@ -1095,6 +1185,28 @@ public class gameEngine extends Activity {
 		            	ic_key_del.setAlpha(255);
 		            	
 		            	keyPressReceiver("del");
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+		
+		ic_key_clr.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/keypad_click.mp3");
+		            	ic_key_clr.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_key_clr.setAlpha(255);
+		            	
+		            	keyPressReceiver("clr");
 		            	
 		                break;
 		            }
