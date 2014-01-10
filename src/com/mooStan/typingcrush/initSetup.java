@@ -382,7 +382,7 @@ public class initSetup {
 
     public void retreiveLeaderBoard(int page,int level){
     	globalVariable.curResultPageNo = page;
-		popupBox.showPopBox("\n\nProcessing, please hold on...",3);
+		popupBox.showPopBox("\n\nLoading, please hold on...",3);
 		
 		trophy_btn.postDelayed(new Runnable() {
 	        @Override

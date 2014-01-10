@@ -172,7 +172,10 @@ public class objectsController {
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground_linear(LinearLayout thisStage, String fileName){
-
+		if(thisStage.getBackground() != null){
+			return;
+		}
+		
 		try 
 		{
 			InputStream ims = myActivity.getAssets().open(fileName);
@@ -197,7 +200,10 @@ public class objectsController {
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground_scrollView(ScrollView thisStage, String fileName){
-
+		if(thisStage.getBackground() != null){
+			return;
+		}
+		
 		try 
 		{
 			InputStream ims = myActivity.getAssets().open(fileName);
@@ -222,7 +228,10 @@ public class objectsController {
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground(RelativeLayout thisStage, String fileName){
-
+		if(thisStage.getBackground() != null){
+			return;
+		}
+		
 		try 
 		{
 			InputStream ims = myActivity.getAssets().open(fileName);

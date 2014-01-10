@@ -191,9 +191,9 @@ public class popupBox extends Activity {
 		            	
 		            	RelativeLayout myview = (RelativeLayout) myActivity.findViewById(R.id.myview);
 		            	if(globalVariable.submitClicked == false){
-		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + "! How about you? ");
+		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + " in Typing Crush! How about you? ");
 		            	}else{
-		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + " and #" + globalVariable.curSubmittedRank + " at the World Ranking! How about you? ");
+		            		publishPhoto(loadBitmapFromView_BITMAP(myview),"I just break a new record with " + globalVariable.scores + " points at level " + globalVariable.currentLevels + " and #" + globalVariable.curSubmittedRank + " at the World Ranking in Typing Crush! How about you? ");
 		            	}
 		        		
 		            	
@@ -298,6 +298,7 @@ public class popupBox extends Activity {
 		        });
 		        Bundle postParams = request.getParameters(); // <-- THIS IS IMPORTANT
 		        postParams.putString("name", message + " Install and join me at http://goo.gl/zcBrSS #typingcrush #typingcrushlevel" + globalVariable.currentLevels);
+		        postParams.putString("link","http://goo.gl/zcBrSS");
 		        request.setParameters(postParams);
 		        request.executeAsync();
 		        

@@ -17,12 +17,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.mooStan.typingcrush.soundsController;
@@ -154,7 +158,10 @@ public class gameEngine extends Activity {
 
 		LinearLayout levelBox = new LinearLayout(myActivity);
 		TextView levelText = new TextView(myActivity);
+		ImageView levelEgg = new ImageView(myActivity);
 	
+		levelBox.setOrientation(LinearLayout.HORIZONTAL);
+		
 		switch(wordPos){
 			case 0:{
 				levelBox.setGravity(Gravity.LEFT);
@@ -176,19 +183,25 @@ public class gameEngine extends Activity {
 		levelText.setTypeface(tf);
 		levelText.setTextSize(20f);
 		
-		if(isStringArrayExist(globalVariable.bonus2,2,globalVariable.currentLevelChallenge[curObject],false)){
+		if(isStringArrayExist(globalVariable.bonus3,3,globalVariable.currentLevelChallenge[curObject],false)){
+			levelText.setTextColor(Color.parseColor("#333333"));
+			levelEgg.setImageResource(R.drawable.ic_bonus_special);
+		}else if(isStringArrayExist(globalVariable.bonus2,2,globalVariable.currentLevelChallenge[curObject],false)){
 			levelText.setTextColor(Color.parseColor("#f90606"));
+			levelEgg.setImageResource(R.drawable.ic_bonus_double);
 		}else if(isStringArrayExist(globalVariable.bonus1,1,globalVariable.currentLevelChallenge[curObject],false)){
 			levelText.setTextColor(Color.parseColor("#1f06f9"));
+			levelEgg.setImageResource(R.drawable.ic_bonus_triple);
 		}else{
 			levelText.setTextColor(Color.parseColor("#333333"));
 		}
 
-		levelText.setPadding(paddings, 2, paddings, 2);
+		levelBox.setPadding(paddings, 2, paddings, 2);
 		
 		levelText.setText(globalVariable.currentLevelChallenge[curObject]);
 		
 		levelBox.setId(curObject);
+		levelBox.addView(levelEgg);
 		levelBox.addView(levelText);
 		gameObjects.addView(levelBox,0);
 
@@ -205,48 +218,87 @@ public class gameEngine extends Activity {
 		switch(type){
 			case 1 : {
 				strArray = globalVariable.bonus1;
+				
+				String[] arraylist1 = globalVariable.bonus1;
+				List<String> list1 = new ArrayList<String>();
+				Collections.addAll(list1, arraylist1);
+				
+				globalVariable.currArrayBonusItemIndex1 = 0;
+				
+				for(String s : strArray)
+			    {
+			        if(strCheck.equals(s))
+			        {
+			        	if(removeNow == true){
+			        		list1.remove(globalVariable.currArrayBonusItemIndex1);
+			        	}
+			        	val = true;
+			        	break;
+			        }
+			        globalVariable.currArrayBonusItemIndex1++;
+			    }
+				
+				globalVariable.bonus1 = list1.toArray(new String[list1.size()]);
+				
 			}
 			case 2 : {
 				strArray = globalVariable.bonus2;
+				
+				String[] arraylist2 = globalVariable.bonus2;
+				List<String> list2 = new ArrayList<String>();
+				Collections.addAll(list2, arraylist2);
+				
+				globalVariable.currArrayBonusItemIndex2 = 0;
+				
+				for(String s : strArray)
+			    {
+			        if(strCheck.equals(s))
+			        {
+			        	if(removeNow == true){
+			        		list2.remove(globalVariable.currArrayBonusItemIndex2);
+			        	}
+			        	val = true;
+			        	break;
+			        }
+			        globalVariable.currArrayBonusItemIndex2++;
+			    }
+				
+				globalVariable.bonus2 = list2.toArray(new String[list2.size()]);
 			}
-		}
-		
-		String[] arraylist = strArray;
-		List<String> list = new ArrayList<String>();
-		Collections.addAll(list, arraylist);
-		
-		globalVariable.currArrayBonusItemIndex = 0;
-Log.v("debug",strArray.length + "");		
-		for(String s : strArray)
-	    {
-	        if(strCheck.equals(s))
-	        {
-	        	if(removeNow == true){
-	        		list.remove(globalVariable.currArrayBonusItemIndex);
-	        	}
-	        	val = true;
-	        	break;
-	        }
-	        globalVariable.currArrayBonusItemIndex++;
-	    }
-
-		switch(type){
-			case 1 : {
-				globalVariable.bonus1 = list.toArray(new String[list.size()]);
+			case 3 : {
+				strArray = globalVariable.bonus3;
+				
+				String[] arraylist3 = globalVariable.bonus3;
+				List<String> list3 = new ArrayList<String>();
+				Collections.addAll(list3, arraylist3);
+				
+				globalVariable.currArrayBonusItemIndex3 = 0;
+				
+				for(String s : strArray)
+			    {
+			        if(strCheck.equals(s))
+			        {
+			        	if(removeNow == true){
+			        		list3.remove(globalVariable.currArrayBonusItemIndex3);
+			        	}
+			        	val = true;
+			        	break;
+			        }
+			        globalVariable.currArrayBonusItemIndex3++;
+			    }
+				
+				globalVariable.bonus3 = list3.toArray(new String[list3.size()]);
 			}
-			case 2 : {
-				globalVariable.bonus2 = list.toArray(new String[list.size()]);
-			}
-		}
-		Log.v("debug",globalVariable.bonus2.length + " - " + globalVariable.bonus1.length);			
+		}	
 		
 		return val;
 	}
 	
 	private void setBonuses(){
-		int randomTo = globalVariable.currentLevelChallenge.length - 10, totolBonus1 = randomNumber(2,(10 + globalVariable.currentLevels)), totolBonus2 = randomNumber(2,(5 + globalVariable.currentLevels));
+		int randomTo = globalVariable.currentLevelChallenge.length - 10, totolBonus1 = (10 + globalVariable.currentLevels), totolBonus2 = (5 + globalVariable.currentLevels), totolBonus3 = (2 + globalVariable.currentLevels);
 		globalVariable.bonus1 = new String[totolBonus1];
 		globalVariable.bonus2 = new String[totolBonus2];
+		globalVariable.bonus3 = new String[totolBonus3];
 
 		for(int i=0;i<totolBonus1;i++){
 			globalVariable.bonus1[i] = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
@@ -262,6 +314,26 @@ Log.v("debug",strArray.length + "");
 		        {
 		        	globalVariable.bonus2[i] = curStr;
 		        	break;
+		        }
+		    }
+		}
+		
+		for(int i=0;i<totolBonus3;i++){
+			//bonus2[i] = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
+			
+			String curStr = globalVariable.currentLevelChallenge[randomNumber(0,randomTo)];
+			for(String s : globalVariable.bonus1)
+		    {
+		        if(!curStr.equals(s))
+		        {
+		        	for(String r : globalVariable.bonus2)
+				    {
+				        if(!curStr.equals(r))
+				        {
+				        	globalVariable.bonus3[i] = curStr;
+				        	break;
+				        }
+				    }
 		        }
 		    }
 		}
@@ -332,18 +404,25 @@ Log.v("debug",strArray.length + "");
 	        	}
 	        	
 	        	list.remove(globalVariable.currArrayItemIndex);
-	        	soundsController.shortSoundClip("sounds/word_hit.mp3");
+	        	
 	        	globalVariable.curTypedWord = "";
 				keyPadInputed.setText(globalVariable.curTypedWord);
 				gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex);
 				globalVariable.curShownObject--;
 				
-				if(isStringArrayExist(globalVariable.bonus2,2,curKeys,true)){
+				if(isStringArrayExist(globalVariable.bonus3,3,curKeys,true)){
+					showBonusHits(0);
+				}else if(isStringArrayExist(globalVariable.bonus2,2,curKeys,true)){
 					globalVariable.scores = globalVariable.scores + 3;
+					showBonusHits(3);
+					soundsController.shortSoundClip("sounds/bonus_scored.mp3");
 				}else if(isStringArrayExist(globalVariable.bonus1,1,curKeys,true)){
 					globalVariable.scores = globalVariable.scores + 2;
+					showBonusHits(2);
+					soundsController.shortSoundClip("sounds/bonus_scored.mp3");
 				}else{
 					globalVariable.scores = globalVariable.scores + 1;
+					soundsController.shortSoundClip("sounds/word_hit.mp3");
 				}
 				
 				ic_trophy_game_scores.setText(globalVariable.scores + "");
@@ -360,6 +439,136 @@ Log.v("debug",strArray.length + "");
 		
 		globalVariable.currentLevelChallenge = list.toArray(new String[list.size()]);
 
+		
+	}
+	
+	private void showBonusHits(int points){
+		if(gameStage.getChildAt(gameStage.getChildCount() - 1).getId() == -1){
+			gameStage.removeView(gameStage.getChildAt(gameStage.getChildCount() - 1));
+		}
+		
+		RelativeLayout bonusShowBox = new RelativeLayout(myActivity);
+		LinearLayout alignBox = new LinearLayout(myActivity);
+		TextView ptsTxt = new TextView(myActivity);
+		ImageView levelEgg = new ImageView(myActivity);
+		
+		alignBox.setGravity(Gravity.CENTER);
+		alignBox.setOrientation(LinearLayout.HORIZONTAL);
+		
+		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
+		ptsTxt.setTypeface(tf);
+		ptsTxt.setTextSize(35);
+		
+		ptsTxt.setText("+" + points);
+		
+		switch(points){
+			case 0 : {
+				levelEgg.setImageResource(R.drawable.ic_bonus_special);
+				ptsTxt.setTextColor(Color.parseColor("#333333"));
+				
+				int specialId = randomNumber(0,3);
+				int luckyPoints = randomNumber(3,10);
+				
+				switch(specialId){
+					case 0:{
+						globalVariable.scores = globalVariable.scores + luckyPoints;
+						ptsTxt.setText("+" + luckyPoints);
+						soundsController.shortSoundClip("sounds/bonus_scored.mp3");
+						break;
+					}
+					case 1:{
+						globalVariable.scores = globalVariable.scores - luckyPoints;
+						ptsTxt.setText("-" + luckyPoints);
+						soundsController.shortSoundClip("sounds/levelFailed.mp3");
+						break;
+					}
+					case 2:{
+						globalVariable.countDowns = globalVariable.countDowns + luckyPoints;
+						ptsTxt.setText("+" + luckyPoints + " seconds");
+						soundsController.shortSoundClip("sounds/bonus_scored.mp3");
+						break;
+					}
+					case 3:{
+						globalVariable.countDowns = globalVariable.countDowns - luckyPoints;
+						ptsTxt.setText("-" + luckyPoints + " seconds");
+						soundsController.shortSoundClip("sounds/levelFailed.mp3");
+						break;
+					}
+				}
+
+				break;
+			}
+			case 2 : {
+				levelEgg.setImageResource(R.drawable.ic_bonus_triple);
+				ptsTxt.setTextColor(Color.parseColor("#1f06f9"));
+				
+				break;
+			}
+			case 3 : {
+				levelEgg.setImageResource(R.drawable.ic_bonus_double);
+				ptsTxt.setTextColor(Color.parseColor("#f90606"));
+				
+				break;
+			}
+		}
+		
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+		          ((int) LayoutParams.WRAP_CONTENT, (int) LayoutParams.WRAP_CONTENT);
+		//params.addRule(RelativeLayout.CENTER_VERTICAL);
+		params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+		params.topMargin = 100;
+		
+		bonusShowBox.setLayoutParams(params);
+		bonusShowBox.setGravity(Gravity.CENTER);
+		
+		bonusShowBox.setId(-1);
+		
+		alignBox.addView(levelEgg);
+		alignBox.addView(ptsTxt);
+		
+		bonusShowBox.addView(alignBox);
+
+		gameStage.addView(bonusShowBox);
+
+		//------add fadeIn-out animation------//
+		AnimationSet set = new AnimationSet(true);
+
+		Animation fadeIn = new AlphaAnimation(1.0f, 0.0f);
+		fadeIn.setDuration(1000);
+		
+		Animation animationScale = new ScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.9f);
+		animationScale.setDuration(1000);
+
+		animationScale.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				if(gameStage.getChildAt(gameStage.getChildCount() - 1).getId() == -1){
+					gameStage.removeView(gameStage.getChildAt(gameStage.getChildCount() - 1));
+				}
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
+		
+		set.addAnimation(animationScale);
+
+		bonusShowBox.startAnimation(set);
+		//------add fadeIn-out animation------//
 		
 	}
 	
@@ -529,7 +738,10 @@ Log.v("debug",strArray.length + "");
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground_text(TextView thisStage, String fileName){
-
+		if(thisStage.getBackground() != null){
+			return;
+		}
+		
 		try 
 		{
 			InputStream ims = myActivity.getAssets().open(fileName);
@@ -554,7 +766,10 @@ Log.v("debug",strArray.length + "");
 	
 	@SuppressLint("NewApi")
 	public void setStageBackground(RelativeLayout thisStage, String fileName){
-
+		if(thisStage.getBackground() != null){
+			return;
+		}
+		
 		try 
 		{
 			InputStream ims = myActivity.getAssets().open(fileName);
