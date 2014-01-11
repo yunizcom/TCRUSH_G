@@ -128,8 +128,8 @@
 	        <ScrollView
 	            android:id="@+id/leaderBoardList"
 	            android:layout_width="fill_parent"
-	            android:paddingTop="35dp"
-           		android:paddingBottom="30dp"
+	            android:paddingTop="45dp"
+           		android:paddingBottom="40dp"
            		android:paddingLeft="5dp"
            		android:paddingRight="5dp"
 	            android:layout_height="wrap_content" >
@@ -683,6 +683,21 @@
             </LinearLayout>    
             
         </LinearLayout>
+        
+        <TextView
+                android:id="@+id/shareTips"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/popboxResult"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:textStyle="bold"
+                android:textColor="#e31717"
+                android:ems="14"
+                android:text="Tips: Get a FREE BOMB by click on FB Share and share this score to your Facebook wall."
+                android:visibility="invisible"
+                android:gravity="center_vertical|center_horizontal" />
         
         <ImageView
                 android:id="@+id/popbox_trophy"

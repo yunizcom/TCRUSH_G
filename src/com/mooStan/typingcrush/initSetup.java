@@ -1,5 +1,9 @@
 package com.mooStan.typingcrush;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.NameValuePair;
@@ -11,6 +15,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -466,27 +472,62 @@ public class initSetup {
 						
 						LinearLayout levelBox = new LinearLayout(myActivity);
 						LinearLayout levelDetails = new LinearLayout(myActivity);
+						LinearLayout playDetails = new LinearLayout(myActivity);
+						TextView noB = new TextView(myActivity);
 						TextView levelText = new TextView(myActivity);
 						TextView scoresText = new TextView(myActivity);
+						ImageView fbPic = new ImageView(myActivity);
 					
 						levelBox.setGravity(Gravity.LEFT);
 						levelDetails.setOrientation(LinearLayout.VERTICAL);
+						playDetails.setOrientation(LinearLayout.HORIZONTAL);
+						
+						playDetails.setGravity(Gravity.CENTER_VERTICAL);
 						
 						levelBox.setLayoutParams(new
 							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 						levelDetails.setLayoutParams(new
 							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
-						levelText.setLayoutParams(new
+						playDetails.setLayoutParams(new
 							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						/*levelText.setLayoutParams(new
+							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));*/
 						scoresText.setLayoutParams(new
 							       LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
+						
+						fbPic.setLayoutParams(new
+							       LayoutParams(50,50));
+						fbPic.setScaleType(ImageView.ScaleType.FIT_CENTER);
 						
 						Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
 						levelText.setTypeface(tf);
 						levelText.setTextSize(22);
-						levelText.setPadding(20, 10, 20, 0);
+						levelText.setPadding(3, 10, 20, 0);
 						
-						levelText.setText(e.getString("no") + ") " + e.getString("n"));
+						noB.setTypeface(tf);
+						noB.setTextSize(22);
+						noB.setPadding(20, 10, 3, 0);
+						
+						noB.setText(e.getString("no") + ")");
+						levelText.setText(e.getString("n"));
+						
+						if(e.getString("fb").equals("")){
+							fbPic.setImageResource(R.drawable.ic_playeravatar);
+						}else{
+							Bitmap bitmap = null;
+							
+							try {
+								bitmap = BitmapFactory.decodeStream((InputStream)new URL("http://graph.facebook.com/" + e.getString("fb") + "/picture").getContent());
+							} catch (MalformedURLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+							fbPic.setImageBitmap(bitmap);
+						}
 						
 						scoresText.setTypeface(tf);
 						scoresText.setTextSize(22);
@@ -495,11 +536,14 @@ public class initSetup {
 						
 						scoresText.setText(e.getString("s") + " pts @ lvl" + e.getString("l"));
 						
-						
+						noB.setTextColor(Color.parseColor("#d80606"));
 						levelText.setTextColor(Color.parseColor("#d80606"));
 						scoresText.setTextColor(Color.parseColor("#212121"));
 	
-						levelDetails.addView(levelText);
+						playDetails.addView(noB);
+						playDetails.addView(fbPic);
+						playDetails.addView(levelText);
+						levelDetails.addView(playDetails);
 						levelDetails.addView(scoresText);
 						
 						levelBox.setId(i);

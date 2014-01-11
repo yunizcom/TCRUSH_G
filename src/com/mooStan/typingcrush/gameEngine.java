@@ -150,6 +150,8 @@ public class gameEngine extends Activity {
     	globalVariable.stopCounter = false;
     	timerCountDown();
     	timerObjectCreate();
+    	
+    	globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), globalVariable.getPlayerName(), 0);
 	}
 	
 	private void createGameObjects(int curObject){
@@ -712,7 +714,7 @@ public class gameEngine extends Activity {
 			
 			popupBox.showPopBox("",2);
 			
-		}else if(globalVariable.scores < ((globalVariable.currentLevels * 10) + globalVariable.currentLevels)){
+		}else if(globalVariable.scores < ((globalVariable.currentLevels * 10) + globalVariable.currentLevels) * 2){
 			
 			popupBox.showPopBox("",2);
 			

@@ -55,7 +55,7 @@ public class popupBox extends Activity {
 	private RelativeLayout popbox, slashScreen, mainMenu, sub_menu, gameStage, leaderBoard;
 	private LinearLayout popboxCenter,popboxResult;
 	private ImageView popboxOK_btn,popbox_trophy,ic_popbox_close,ic_fb_share,ic_submit_button;
-	private TextView popboxMSG,popboxResultPts,popboxResultLvl2,popboxResultLvl,popboxResultPts2;
+	private TextView popboxMSG,popboxResultPts,popboxResultLvl2,popboxResultLvl,popboxResultPts2,shareTips;
 	private LinearLayout level_list;
 	private EditText mynickName;
 	
@@ -83,6 +83,7 @@ public class popupBox extends Activity {
 		popboxResultPts2 = (TextView) myActivity.findViewById(R.id.popboxResultPts2);
 		popboxResultLvl2 = (TextView) myActivity.findViewById(R.id.popboxResultLvl2);
 		popboxResultLvl = (TextView) myActivity.findViewById(R.id.popboxResultLvl);
+		shareTips = (TextView) myActivity.findViewById(R.id.shareTips);
 		popbox_trophy = (ImageView) myActivity.findViewById(R.id.popbox_trophy);
 		ic_popbox_close = (ImageView) myActivity.findViewById(R.id.ic_popbox_close);
 		ic_fb_share = (ImageView) myActivity.findViewById(R.id.ic_fb_share);
@@ -288,7 +289,11 @@ public class popupBox extends Activity {
 						popboxOK_btn.postDelayed(new Runnable() {
 					        @Override
 					        public void run() {
-				        	
+					        	
+					        	if(globalVariable.getShare() == 0){
+					        		globalVariable.saveYunizSaved(globalVariable.getLevel(), (globalVariable.getBomb() + 1), globalVariable.getPlayerName(), 1);
+					        	}
+					        	
 					        	closePopBox();
 					        	showPopBox("",1);
 
@@ -311,8 +316,8 @@ public class popupBox extends Activity {
 				    public void call(Session session, SessionState state, Exception exception) {
 						//Log.v("DEBUG","FB session : " + session + " | " + session.isOpened());	
 				    	if (session.isOpened()) {
-				    		publishPhoto(fbImg,fbMsg);
-				    		/*// make request to the /me API
+
+				    		// make request to the /me API
 				    		Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
 
 				    		  // callback after Graph API response with user object
@@ -320,12 +325,15 @@ public class popupBox extends Activity {
 				    		  public void onCompleted(GraphUser user, Response response) {
 				    			  
 				    			  if (user != null) {
-				    				  //TextView welcome = (TextView) findViewById(R.id.welcome);
-										Log.v("DEBUG","LOGIN FB : " + user + " | " + response);
-				    				}
+				    				  //Log.v("DEBUG","LOGIN FB : " + user.getId() + " | " + user.getName());
+				    				  globalVariable.saveYunizFBID(user.getId());
+				    				  mynickName.setText(user.getName());
+				    				  globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), user.getName(), globalVariable.getShare());
+				    			  }
+				    			  publishPhoto(fbImg,fbMsg);
 				    			  
 				    		  }
-				    		});*/
+				    		});
 				    		
 				    	}
 				    	
@@ -346,6 +354,7 @@ public class popupBox extends Activity {
 	/* for FB SDK */  
 	
 	public void closePopBox(){
+		shareTips.setVisibility(View.INVISIBLE);
 		popbox.setVisibility(View.INVISIBLE);
     	popbox.setClickable(false);
     	globalVariable.isPopUpOpen = false;
@@ -383,6 +392,7 @@ public class popupBox extends Activity {
 				break;
 			}
 			case 1:{ // result shown
+				shareTips.setVisibility(View.VISIBLE);
 				soundsController.shortSoundClip("sounds/splashScreen_sound.mp3");
 				
 				popboxResultLvl.setText("Level " + globalVariable.currentLevels);
@@ -431,8 +441,8 @@ public class popupBox extends Activity {
 					popboxResultPts.setText("You need " + (topScore + 1) + " points");
 					popboxResultPts2.setText("You need " + (topScore + 1) + " points");
 				}else{
-					popboxResultPts.setText("You need " + ((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) + " points");
-					popboxResultPts2.setText("You need " + ((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) + " points");
+					popboxResultPts.setText("You need " + (((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) * 2) + " points");
+					popboxResultPts2.setText("You need " + (((globalVariable.currentLevels * 10) + globalVariable.currentLevels + 1) * 2) + " points");
 				}
 				
 				ic_submit_button.setVisibility(View.INVISIBLE);
@@ -573,7 +583,7 @@ public class popupBox extends Activity {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String url = globalVariable.gameServerAPI_URL + "?mod=1&nickname=" + nickname + "&score=" + scores + "&uid=" + globalVariable.getmyUID() + "&levels=" + globalVariable.currentLevels;
+		String url = globalVariable.gameServerAPI_URL + "?mod=1&nickname=" + nickname + "&score=" + scores + "&uid=" + globalVariable.getmyUID() + "&fbid=" + globalVariable.getmyFBID() + "&levels=" + globalVariable.currentLevels;
 		//-------load JSON
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         //nameValuePairs.add(new BasicNameValuePair("convo_id", "4546db1fd1"));

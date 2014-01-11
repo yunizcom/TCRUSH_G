@@ -24,12 +24,46 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 public class GlobalVars extends Application {
-	public static final String PREFS_UID = "YunizUID", PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores", gameServerAPI_URL = "http://www.yuniz.com/apps/tyc/";
+	public static final String PREFS_FBID = "YunizFBID", PREFS_UID = "YunizUID", PREFS_SETTINGS = "YunizSaved", PREFS_SETTINGS_SCORES = "YunizSCores", gameServerAPI_URL = "http://www.yuniz.com/apps/tyc/";
 	public boolean submitClicked = false, isEnterName = false, isBlockOpen = false, isResultOpen = false, isPopUpOpen = false, stopCounter = false;
 	public int curResultLevels = 0,curResultPageNo = 1,minimize = 0, scores = 0, currentObjDelayed = 0, currentToDelayed = 0, currentLevels = 0, currentTill = 0, curentStage = 0, countTotalDowns = 0, countDowns = 0, gameStage_TimeBar_Width = 0, curShownObject = 0, currArrayItemIndex = 0, currArrayBonusItemIndex1 = 0, currArrayBonusItemIndex2 = 0, currArrayBonusItemIndex3 = 0;
 	public String curSubmittedRank = "0",curTypedWord;
 	public String[] bonus1,bonus2,bonus3,currentLevelChallenge;
 	public MediaPlayer bgMusic = new MediaPlayer(), shortMusic = new MediaPlayer(), objMusic = new MediaPlayer();
+	
+	public void saveYunizFBID(String fbID){ // usage : saveYunizUID(10);
+		  SharedPreferences settings = this.getSharedPreferences(PREFS_FBID, 0);
+	      SharedPreferences.Editor editor = settings.edit();
+	      editor.putString("myFBID", fbID);
+
+	      editor.commit();
+	}
+	
+	public JSONObject retriveFBID() throws JSONException{ // usage : retriveFBID().getString("myFBID")
+		String returnString = "";
+		SharedPreferences settings = this.getSharedPreferences(PREFS_FBID, 0);
+		returnString = "{'myFBID' : " + settings.getString("myFBID","")  + "}";
+		
+		JSONObject json = new JSONObject(returnString);
+
+		return json;
+	}
+	
+	public String getmyFBID(){
+		String curValue = "";
+		
+		try {
+			curValue = retriveFBID().getString("myFBID");
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return curValue;
+	}
 	
 	public void saveYunizUID(){ // usage : saveYunizUID(10);
 		  String uid = newUID();
