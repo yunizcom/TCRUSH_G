@@ -39,7 +39,7 @@ public class gameEngine extends Activity {
 	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores,ic_mybomb_txt;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage,leaderBoard;
 	private LinearLayout gameObjects;
-	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del,ic_key_clr;
+	private ImageView ic_mybomb,ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del,ic_key_clr;
 	
 	public soundsController soundsController;
 	public popupBox popupBox;
@@ -66,6 +66,8 @@ public class gameEngine extends Activity {
 		ic_mybomb_txt = (TextView) myActivity.findViewById(R.id.ic_mybomb_txt);
 		
 		ic_time_bar = (ImageView) myActivity.findViewById(R.id.ic_time_bar);
+		
+		ic_mybomb = (ImageView) myActivity.findViewById(R.id.ic_mybomb);
 		
 		ic_key_q = (ImageView) myActivity.findViewById(R.id.ic_key_q);
 		ic_key_w = (ImageView) myActivity.findViewById(R.id.ic_key_w);
@@ -120,6 +122,7 @@ public class gameEngine extends Activity {
 		keyPadInputed.setText("* start typing now *");
 		
 		ic_trophy_game_scores.setText(globalVariable.scores + "");
+		ic_mybomb_txt.setText("x" + globalVariable.getBomb());
 		
 		stageController(gameStage);
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
@@ -213,8 +216,11 @@ public class gameEngine extends Activity {
 	}
 	
 	private boolean isStringArrayExist(String[] strArray, int type, String strCheck, boolean removeNow){
-
 		boolean val = false;
+		
+		if(strCheck == null || strCheck.length() < 1 || strCheck.equals(null) || strCheck.equals("")){
+			return val;
+		}
 		
 		switch(type){
 			case 1 : {
@@ -422,7 +428,7 @@ public class gameEngine extends Activity {
 				keyPadInputed.setText(globalVariable.curTypedWord);
 				gameObjects.removeViewAt((gameObjects.getChildCount() - 1) - globalVariable.currArrayItemIndex);
 				globalVariable.curShownObject--;
-				
+
 				if(isStringArrayExist(globalVariable.bonus3,3,curKeys,true)){
 					showBonusHits(0);
 				}else if(isStringArrayExist(globalVariable.bonus2,2,curKeys,true)){
@@ -455,6 +461,84 @@ public class gameEngine extends Activity {
 		
 	}
 	
+	private void showBombEffect(){
+		if(gameStage.getChildAt(gameStage.getChildCount() - 1).getId() == -1){
+			gameStage.removeView(gameStage.getChildAt(gameStage.getChildCount() - 1));
+		}
+		
+		RelativeLayout bonusShowBox = new RelativeLayout(myActivity);
+		TextView ptsTxt = new TextView(myActivity);
+		ImageView levelEgg = new ImageView(myActivity);
+		
+		Typeface tf = Typeface.createFromAsset(myActivity.getAssets(), "fonts/Cookies.ttf");
+		ptsTxt.setTypeface(tf);
+		ptsTxt.setTextSize(15);
+		
+		ptsTxt.setText("Blew a word away...");
+	
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+		          ((int) LayoutParams.WRAP_CONTENT, (int) LayoutParams.WRAP_CONTENT);
+		//params.addRule(RelativeLayout.CENTER_VERTICAL);
+		params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+		params.topMargin = 100;
+		
+		bonusShowBox.setLayoutParams(params);
+		bonusShowBox.setGravity(Gravity.CENTER);
+		
+		ptsTxt.setGravity(Gravity.CENTER);
+		
+		levelEgg.setImageResource(R.drawable.ic_bomb_effect);
+		ptsTxt.setTextColor(Color.parseColor("#c92121"));
+		
+		bonusShowBox.setId(-1);
+		
+		bonusShowBox.addView(levelEgg);
+		bonusShowBox.addView(ptsTxt);
+
+		gameStage.addView(bonusShowBox);
+
+		//------add fadeIn-out animation------//
+		AnimationSet set = new AnimationSet(true);
+
+		Animation fadeIn = new AlphaAnimation(1.0f, 0.0f);
+		fadeIn.setDuration(1000);
+		
+		Animation animationScale = new ScaleAnimation(0,1,0,1,Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.9f);
+		animationScale.setDuration(1000);
+
+		animationScale.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				if(gameStage.getChildAt(gameStage.getChildCount() - 1).getId() == -1){
+					gameStage.removeView(gameStage.getChildAt(gameStage.getChildCount() - 1));
+				}
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
+		
+		set.addAnimation(animationScale);
+
+		bonusShowBox.startAnimation(set);
+		//------add fadeIn-out animation------//
+		
+	}
+	
 	private void showBonusHits(int points){
 		if(gameStage.getChildAt(gameStage.getChildCount() - 1).getId() == -1){
 			gameStage.removeView(gameStage.getChildAt(gameStage.getChildCount() - 1));
@@ -479,7 +563,7 @@ public class gameEngine extends Activity {
 				levelEgg.setImageResource(R.drawable.ic_bonus_special);
 				ptsTxt.setTextColor(Color.parseColor("#c92121"));
 				
-				int specialId = randomNumber(0,3);
+				int specialId = randomNumber(0,4);
 				int luckyPoints = randomNumber(3,10);
 				
 				switch(specialId){
@@ -505,6 +589,15 @@ public class gameEngine extends Activity {
 						globalVariable.countDowns = globalVariable.countDowns - luckyPoints;
 						ptsTxt.setText("-" + luckyPoints + " seconds");
 						soundsController.shortSoundClip("sounds/levelFailed.mp3");
+						break;
+					}case 4:{
+						int curBombUnits = globalVariable.getBomb();
+						curBombUnits++;
+						globalVariable.saveYunizSaved(globalVariable.getLevel(), curBombUnits, globalVariable.getPlayerName(), globalVariable.getShare());
+						
+						ic_mybomb_txt.setText("x" + curBombUnits);
+						ptsTxt.setText("+1 bomb");
+						soundsController.shortSoundClip("sounds/bonus_scored.mp3");
 						break;
 					}
 				}
@@ -826,6 +919,38 @@ public class gameEngine extends Activity {
 	
 	//-----------all keys press-------------
 	private void initAllKeysPress(){
+		
+		ic_mybomb.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/keypad_click.mp3");
+		            	ic_mybomb.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_mybomb.setAlpha(255);
+		            	
+		            	if(globalVariable.currentLevelChallenge.length > 0 && gameObjects.getChildCount() > 0 && globalVariable.getBomb() > 0){
+		            		//showBombEffect();
+		            		int curBombUnits = globalVariable.getBomb();
+		            		curBombUnits--;
+		            		
+		            		globalVariable.saveYunizSaved(globalVariable.getLevel(), curBombUnits, globalVariable.getPlayerName(), globalVariable.getShare());
+		            		
+		            		ic_mybomb_txt.setText("x" + curBombUnits);
+		            		
+		            		typingHit(globalVariable.currentLevelChallenge[0]);
+		            	}
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
 		
 		ic_key_q.setOnTouchListener(new View.OnTouchListener() {
 	        @Override
