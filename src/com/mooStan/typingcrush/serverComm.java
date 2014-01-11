@@ -26,7 +26,7 @@ public class serverComm {
 		}
 	}
 	
-	private boolean isNetworkAvailable() {
+	public boolean isNetworkAvailable() {
 	    ConnectivityManager connectivityManager 
 	          = (ConnectivityManager) myContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

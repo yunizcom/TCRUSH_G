@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -168,6 +170,51 @@ public class initSetup {
 		keyPadInputed.setTextSize(14f);
 		keyPadInputed.setTypeface(tf2);
 		keyPadInputed.setTextColor(Color.parseColor("#333333"));
+		
+		if(serverComm.isNetworkAvailable()){
+			String webViewHTMLs = "<!DOCTYPE html><head><title>Typing Crush - Facebook Like</title><style>img{border:0px;}</style></head><body style=\"margin:0px;padding:2px 5px;background-color:rgba(247,253,255,0.3);\">" +
+					"<iframe src=\"http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Ftypingcrush&amp;width&amp;layout=standard&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=80&amp;appId=466235153487139\" scrolling=\"no\" frameborder=\"0\" style=\"border:none; overflow:hidden; height:100%; width:100%;\" allowTransparency=\"true\"></iframe>" +
+					"</body></html>";
+			WebView contentWebView=new WebView(myActivity);
+			//contentWebView.loadUrl("http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Ftypingcrush&width&layout=standard&action=like&show_faces=true&share=true&height=80&appId=466235153487139");
+			contentWebView.loadDataWithBaseURL(null,webViewHTMLs,"text/html","UTF-8","about:blank");
+			contentWebView.setBackgroundColor(0);
+			contentWebView.setHorizontalScrollBarEnabled(false);
+			contentWebView.setVerticalScrollBarEnabled(false);
+			contentWebView.setFocusableInTouchMode(false);
+			contentWebView.setFocusable(false);
+			contentWebView.getSettings().setSupportZoom(false);
+			contentWebView.getSettings().setJavaScriptEnabled(false);
+			contentWebView.getSettings().setPluginsEnabled(false);
+			contentWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+			
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+			          ((int) LayoutParams.MATCH_PARENT, (screenHeight / 100 * 7));
+			
+			params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, contentWebView.getId());
+			
+			contentWebView.setLayoutParams(params);
+			
+			mainMenu.addView(contentWebView);
+
+			fb_fanpage_btn.setVisibility(View.INVISIBLE);
+			
+			contentWebView.setOnTouchListener(new View.OnTouchListener() {
+		        @Override
+		        public boolean onTouch(View arg0, MotionEvent arg1) {
+		            switch (arg1.getAction()) {
+			            case MotionEvent.ACTION_UP:{
+			            	Uri uri = Uri.parse("https://www.facebook.com/typingcrush");
+				       		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				       		myActivity.startActivity(intent);
+			            	
+			                break;
+			            }
+		            }
+		            return true;
+		        }
+		    });
+		}
 		
 		slashScreen.postDelayed(new Runnable() {
 	        @Override
