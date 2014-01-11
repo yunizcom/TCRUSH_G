@@ -62,7 +62,7 @@ public class initSetup {
 	
 	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right;
 	
-	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores;
+	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores,ic_mybomb_txt;
 
 	initSetup(Context context, Activity myActivityReference) {
 		myContext = context;
@@ -129,6 +129,7 @@ public class initSetup {
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
 		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
 		ic_trophy_game_scores = (TextView) myActivity.findViewById(R.id.ic_trophy_game_scores);
+		ic_mybomb_txt = (TextView) myActivity.findViewById(R.id.ic_mybomb_txt);
 	    
 		objectsController.setWindowDetails(screenWidth,screenHeight,smallScreen,sdk);
 		
@@ -159,6 +160,10 @@ public class initSetup {
 		ic_trophy_game_scores.setTextSize(24f);
 		ic_trophy_game_scores.setTypeface(tf);
 		ic_trophy_game_scores.setTextColor(Color.parseColor("#ff3b3b"));
+		
+		ic_mybomb_txt.setTextSize(24f);
+		ic_mybomb_txt.setTypeface(tf);
+		ic_mybomb_txt.setTextColor(Color.parseColor("#ff3b3b"));
 		
 		keyPadInputed.setTextSize(14f);
 		keyPadInputed.setTypeface(tf2);

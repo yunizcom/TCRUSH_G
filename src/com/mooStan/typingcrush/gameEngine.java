@@ -36,7 +36,7 @@ public class gameEngine extends Activity {
 	private Context myContext;
 	private Activity myActivity;
 	
-	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores;
+	private TextView stageLevelShow, stageTimeShow, keyPadInputed, ic_trophy_game_scores,ic_mybomb_txt;
 	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage,leaderBoard;
 	private LinearLayout gameObjects;
 	private ImageView ic_time_bar,ic_key_q,ic_key_w,ic_key_e,ic_key_r,ic_key_t,ic_key_y,ic_key_u,ic_key_i,ic_key_o,ic_key_p,ic_key_a,ic_key_s,ic_key_d,ic_key_f,ic_key_g,ic_key_h,ic_key_j,ic_key_k,ic_key_l,ic_key_z,ic_key_x,ic_key_c,ic_key_v,ic_key_b,ic_key_n,ic_key_m,ic_key_del,ic_key_clr;
@@ -63,6 +63,7 @@ public class gameEngine extends Activity {
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
 		keyPadInputed = (TextView) myActivity.findViewById(R.id.keyPadInputed);
 		ic_trophy_game_scores = (TextView) myActivity.findViewById(R.id.ic_trophy_game_scores);
+		ic_mybomb_txt = (TextView) myActivity.findViewById(R.id.ic_mybomb_txt);
 		
 		ic_time_bar = (ImageView) myActivity.findViewById(R.id.ic_time_bar);
 		
@@ -184,13 +185,13 @@ public class gameEngine extends Activity {
 		levelText.setTextSize(20f);
 		
 		if(isStringArrayExist(globalVariable.bonus3,3,globalVariable.currentLevelChallenge[curObject],false)){
-			levelText.setTextColor(Color.parseColor("#333333"));
+			levelText.setTextColor(Color.parseColor("#c92121"));
 			levelEgg.setImageResource(R.drawable.ic_bonus_special);
 		}else if(isStringArrayExist(globalVariable.bonus2,2,globalVariable.currentLevelChallenge[curObject],false)){
-			levelText.setTextColor(Color.parseColor("#f90606"));
+			levelText.setTextColor(Color.parseColor("#4d4d4d"));
 			levelEgg.setImageResource(R.drawable.ic_bonus_double);
 		}else if(isStringArrayExist(globalVariable.bonus1,1,globalVariable.currentLevelChallenge[curObject],false)){
-			levelText.setTextColor(Color.parseColor("#1f06f9"));
+			levelText.setTextColor(Color.parseColor("#348ca5"));
 			levelEgg.setImageResource(R.drawable.ic_bonus_triple);
 		}else{
 			levelText.setTextColor(Color.parseColor("#333333"));
@@ -217,6 +218,10 @@ public class gameEngine extends Activity {
 		
 		switch(type){
 			case 1 : {
+				if(globalVariable.bonus1.length < 1){
+					return val;
+				}
+				
 				strArray = globalVariable.bonus1;
 				
 				String[] arraylist1 = globalVariable.bonus1;
@@ -242,6 +247,10 @@ public class gameEngine extends Activity {
 				
 			}
 			case 2 : {
+				if(globalVariable.bonus2.length < 1){
+					return val;
+				}
+				
 				strArray = globalVariable.bonus2;
 				
 				String[] arraylist2 = globalVariable.bonus2;
@@ -266,6 +275,10 @@ public class gameEngine extends Activity {
 				globalVariable.bonus2 = list2.toArray(new String[list2.size()]);
 			}
 			case 3 : {
+				if(globalVariable.bonus3.length < 1){
+					return val;
+				}
+				
 				strArray = globalVariable.bonus3;
 				
 				String[] arraylist3 = globalVariable.bonus3;
@@ -459,12 +472,12 @@ public class gameEngine extends Activity {
 		ptsTxt.setTypeface(tf);
 		ptsTxt.setTextSize(35);
 		
-		ptsTxt.setText("+" + points);
+		ptsTxt.setText("+" + points + " points");
 		
 		switch(points){
 			case 0 : {
 				levelEgg.setImageResource(R.drawable.ic_bonus_special);
-				ptsTxt.setTextColor(Color.parseColor("#333333"));
+				ptsTxt.setTextColor(Color.parseColor("#c92121"));
 				
 				int specialId = randomNumber(0,3);
 				int luckyPoints = randomNumber(3,10);
@@ -472,13 +485,13 @@ public class gameEngine extends Activity {
 				switch(specialId){
 					case 0:{
 						globalVariable.scores = globalVariable.scores + luckyPoints;
-						ptsTxt.setText("+" + luckyPoints);
+						ptsTxt.setText("+" + luckyPoints + " points");
 						soundsController.shortSoundClip("sounds/bonus_scored.mp3");
 						break;
 					}
 					case 1:{
 						globalVariable.scores = globalVariable.scores - luckyPoints;
-						ptsTxt.setText("-" + luckyPoints);
+						ptsTxt.setText("-" + luckyPoints + " points");
 						soundsController.shortSoundClip("sounds/levelFailed.mp3");
 						break;
 					}
@@ -500,13 +513,13 @@ public class gameEngine extends Activity {
 			}
 			case 2 : {
 				levelEgg.setImageResource(R.drawable.ic_bonus_triple);
-				ptsTxt.setTextColor(Color.parseColor("#1f06f9"));
+				ptsTxt.setTextColor(Color.parseColor("#348ca5"));
 				
 				break;
 			}
 			case 3 : {
 				levelEgg.setImageResource(R.drawable.ic_bonus_double);
-				ptsTxt.setTextColor(Color.parseColor("#f90606"));
+				ptsTxt.setTextColor(Color.parseColor("#4d4d4d"));
 				
 				break;
 			}
