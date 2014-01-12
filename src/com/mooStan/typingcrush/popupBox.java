@@ -34,6 +34,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mooStan.typingcrush.R;
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.RequestAsyncTask;
@@ -41,6 +43,8 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.mooStan.typingcrush.soundsController;
 
 public class popupBox extends Activity {
@@ -324,13 +328,18 @@ public class popupBox extends Activity {
 				    		  @Override
 				    		  public void onCompleted(GraphUser user, Response response) {
 				    			  
+				    			  
 				    			  if (user != null) {
 				    				  //Log.v("DEBUG","LOGIN FB : " + user.getId() + " | " + user.getName());
 				    				  globalVariable.saveYunizFBID(user.getId());
 				    				  mynickName.setText(user.getName());
 				    				  globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), user.getName(), globalVariable.getShare());
 				    			  }
-				    			  publishPhoto(fbImg,fbMsg);
+				    			  if(globalVariable.curentStage == 1){
+				    				  sendFBInviteDialog();
+				    			  }else{
+				    				  publishPhoto(fbImg,fbMsg);
+				    			  }
 				    			  
 				    		  }
 				    		});
@@ -350,6 +359,81 @@ public class popupBox extends Activity {
 		        }
 		    }
 		    return true;
+		}
+	    
+	    public void sendFBInviteDialog() {
+	    	Session session = Session.getActiveSession();
+	    	
+	    	if (session != null){
+	    		Bundle params = new Bundle();
+	    	    params.putString("message", "Come! Play Typing Crush with me.");
+
+	    	    WebDialog requestsDialog = (
+	    	        new WebDialog.RequestsDialogBuilder(myActivity,
+	    	            Session.getActiveSession(),
+	    	            params))
+	    	            .setOnCompleteListener(new OnCompleteListener() {
+
+	    	                @Override
+	    	                public void onComplete(Bundle values,
+	    	                    FacebookException error) {
+	    	                    if (error != null) {
+	    	                        if (error instanceof FacebookOperationCanceledException) {
+	    	                            //Log.v("debug","cancel");
+	    	                        } else {
+	    	                        	//Log.v("debug","network error");
+	    	                        }
+	    	                    } else {
+	    	                        final String requestId = values.getString("request");
+	    	                        if (requestId != null) {
+	    	                        	//Log.v("debug","sent");
+	    	                        	globalVariable.saveYunizSaved(globalVariable.getLevel(), (globalVariable.getBomb() + 1), globalVariable.getPlayerName(), globalVariable.getShare());
+	    	                        } else {
+	    	                        	//Log.v("debug","cancel");
+	    	                        }
+	    	                    }   
+	    	                }
+
+	    	            })
+	    	            .build();
+	    	    requestsDialog.show();
+	    	}else{
+	    		Session.openActiveSession(myActivity, true, new Session.StatusCallback() {
+		    		
+				    // callback when session changes state
+				    @SuppressWarnings("deprecation")
+					@Override
+				    public void call(Session session, SessionState state, Exception exception) {
+						//Log.v("DEBUG","FB session : " + session + " | " + session.isOpened());	
+				    	if (session.isOpened()) {
+
+				    		// make request to the /me API
+				    		Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+				    		  // callback after Graph API response with user object
+				    		  @Override
+				    		  public void onCompleted(GraphUser user, Response response) {
+				    			  
+				    			  if (user != null) {
+				    				  //Log.v("DEBUG","LOGIN FB : " + user.getId() + " | " + user.getName());
+				    				  globalVariable.saveYunizFBID(user.getId());
+				    				  mynickName.setText(user.getName());
+				    				  globalVariable.saveYunizSaved(globalVariable.getLevel(), globalVariable.getBomb(), user.getName(), globalVariable.getShare());
+				    			  }
+				    			  if(globalVariable.curentStage == 1){
+				    				  sendFBInviteDialog();
+				    			  }else{
+				    				  publishPhoto(fbImg,fbMsg);
+				    			  }
+				    			  
+				    		  }
+				    		});
+				    		
+				    	}
+				    	
+				    }
+				  });
+	    	}
 		}
 	/* for FB SDK */  
 	

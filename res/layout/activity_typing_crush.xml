@@ -54,6 +54,15 @@
             android:layout_alignTop="@+id/trophy_btn"
             android:layout_toLeftOf="@+id/trophy_btn"
             android:src="@drawable/ic_play_btn" />
+        
+        <ImageView
+            android:id="@+id/ic_invitefriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ic_play_btn"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:src="@drawable/ic_invitefriends" />
 	
 	</RelativeLayout>
     

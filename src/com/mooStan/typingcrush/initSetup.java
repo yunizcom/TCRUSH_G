@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Display;
@@ -39,6 +40,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.WebDialog;
+import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.serverComm;
 import com.mooStan.typingcrush.soundsController;
@@ -68,7 +78,7 @@ public class initSetup {
 	private LinearLayout keypadBg, scores_list;
 	private ScrollView leaderBoardList;
 	
-	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right, ic_how_btn, ic_howto_continue_btn, ic_howto_menu_btn;
+	private ImageView ic_invitefriends, fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right, ic_how_btn, ic_howto_continue_btn, ic_howto_menu_btn;
 	
 	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores,ic_mybomb_txt;
 
@@ -126,6 +136,7 @@ public class initSetup {
 		scores_list = (LinearLayout) myActivity.findViewById(R.id.scores_list);
 		leaderBoardList = (ScrollView) myActivity.findViewById(R.id.leaderBoardList);
 		
+		ic_invitefriends = (ImageView) myActivity.findViewById(R.id.ic_invitefriends);
 		fb_fanpage_btn = (ImageView) myActivity.findViewById(R.id.fb_fanpage_btn);
 		trophy_btn = (ImageView) myActivity.findViewById(R.id.trophy_btn);
 		ic_play_btn = (ImageView) myActivity.findViewById(R.id.ic_play_btn);
@@ -522,8 +533,32 @@ public class initSetup {
 	            return true;
 	        }
 	    });
+	    
+	    ic_invitefriends.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_invitefriends.setAlpha(180);
+
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_invitefriends.setAlpha(255);
+		            	
+		            	popupBox.sendFBInviteDialog();
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
     }
 
+    
+    
     public void retreiveLeaderBoard(int page,int level){
     	globalVariable.curResultPageNo = page;
 		popupBox.showPopBox("\n\nLoading, please hold on...",3);
