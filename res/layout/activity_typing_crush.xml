@@ -98,9 +98,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/ic_continue_btn" />
+        
+        <ImageView
+            android:id="@+id/ic_how_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_how_btn" />
+	
+	</RelativeLayout>
+	
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:paddingBottom="@dimen/activity_vertical_margin"
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_vertical_margin"
+		android:visibility="invisible"
+	    android:id="@+id/howToPlay" >
+
+        <ImageView
+            android:id="@+id/ic_howto_continue_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="1dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_continue_btn" />
+        
+        <ImageView
+            android:id="@+id/ic_howto_menu_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="1dp"
+            android:layout_marginBottom="13dp"
+            android:src="@drawable/ic_gomenu" />
 	
 	</RelativeLayout>
 	
@@ -695,7 +738,7 @@
                 android:textStyle="bold"
                 android:textColor="#e31717"
                 android:ems="14"
-                android:text="Tips: Get a FREE BOMB by click on FB Share and share this score to your Facebook wall."
+                android:text="Tips: Get a FREE BOMB by clicking FB Share and share this score on your Facebook wall."
                 android:visibility="invisible"
                 android:gravity="center_vertical|center_horizontal" />
         

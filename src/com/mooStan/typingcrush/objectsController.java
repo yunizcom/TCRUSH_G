@@ -34,6 +34,7 @@ public class objectsController {
 	
 	private LinearLayout level_list;
 	private ScrollView scrollList;
+	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage, leaderBoard, howToPlay;
 	
 	private int curGloLevel = 0;
 	
@@ -54,6 +55,13 @@ public class objectsController {
 		
 		level_list = (LinearLayout) myActivity.findViewById(R.id.level_list);
 		scrollList = (ScrollView) myActivity.findViewById(R.id.scrollList);
+
+		slashScreen = (RelativeLayout) myActivity.findViewById(R.id.slashScreen);
+		mainMenu = (RelativeLayout) myActivity.findViewById(R.id.mainMenu);
+		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
+		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
+		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
+		howToPlay = (RelativeLayout) myActivity.findViewById(R.id.howToPlay);
 		
 		globalVariable = (GlobalVars) myActivity.getApplicationContext();
 	}
@@ -130,7 +138,15 @@ public class objectsController {
 			levelBox.setOnClickListener(new OnClickListener(){
 		        public void onClick(View v) 
 		        {
-		        	gotoCurrentLevel(v.getId());
+
+		        	if(globalVariable.getLevel() == 0){
+		            	stageController(howToPlay);
+		            	setStageBackground(howToPlay,"backgrounds/how_to_play.jpg");
+		            	globalVariable.curentStage = 3;
+	            	}else{
+	            		gotoCurrentLevel(v.getId());
+	            	}
+		        	
 		        }
 		    });
 			
@@ -168,6 +184,27 @@ public class objectsController {
 			popupBox.showPopBox("You are not allow to jump across levels, please play them one by one.",0);
 		}
 		
+	}
+	
+	private void stageController(RelativeLayout thisStage){
+		slashScreen.setVisibility(View.INVISIBLE);
+		mainMenu.setVisibility(View.INVISIBLE);
+		sub_menu.setVisibility(View.INVISIBLE);
+		gameStage.setVisibility(View.INVISIBLE);
+		leaderBoard.setVisibility(View.INVISIBLE);
+		howToPlay.setVisibility(View.INVISIBLE);
+		
+		slashScreen.setClickable(false);
+		mainMenu.setClickable(false);
+		sub_menu.setClickable(false);
+		gameStage.setClickable(false);
+		leaderBoard.setClickable(false);
+		howToPlay.setVisibility(View.INVISIBLE);
+		
+		thisStage.setVisibility(View.VISIBLE);
+		thisStage.setClickable(true);
+		
+		System.gc();
 	}
 	
 	@SuppressLint("NewApi")

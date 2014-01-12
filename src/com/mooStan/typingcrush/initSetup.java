@@ -64,11 +64,11 @@ public class initSetup {
 	private int screenWidth = 0, screenHeight = 0, sdk = 0;
 	private boolean smallScreen = false;
 	
-	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage, leaderBoard;
+	private RelativeLayout slashScreen, mainMenu, sub_menu, gameStage, leaderBoard, howToPlay;
 	private LinearLayout keypadBg, scores_list;
 	private ScrollView leaderBoardList;
 	
-	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right;
+	private ImageView fb_fanpage_btn, trophy_btn, ic_play_btn, ic_continue_btn, ic_gomenu, ic_navi_left, ic_navi_right, ic_how_btn, ic_howto_continue_btn, ic_howto_menu_btn;
 	
 	private TextView stageLevelShow,stageTimeShow,keyPadInputed,ic_trophy_game_scores,ic_mybomb_txt;
 
@@ -120,6 +120,7 @@ public class initSetup {
 		sub_menu = (RelativeLayout) myActivity.findViewById(R.id.sub_menu);
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
 		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
+		howToPlay = (RelativeLayout) myActivity.findViewById(R.id.howToPlay);
 		
 		keypadBg = (LinearLayout) myActivity.findViewById(R.id.keypadBg);
 		scores_list = (LinearLayout) myActivity.findViewById(R.id.scores_list);
@@ -132,6 +133,9 @@ public class initSetup {
 		ic_gomenu = (ImageView) myActivity.findViewById(R.id.ic_gomenu);
 		ic_navi_left = (ImageView) myActivity.findViewById(R.id.ic_navi_left);
 		ic_navi_right = (ImageView) myActivity.findViewById(R.id.ic_navi_right);
+		ic_how_btn = (ImageView) myActivity.findViewById(R.id.ic_how_btn);
+		ic_howto_continue_btn = (ImageView) myActivity.findViewById(R.id.ic_howto_continue_btn);
+		ic_howto_menu_btn = (ImageView) myActivity.findViewById(R.id.ic_howto_menu_btn);
 		
 		stageLevelShow = (TextView) myActivity.findViewById(R.id.stageLevelShow);
 		stageTimeShow = (TextView) myActivity.findViewById(R.id.stageTimeShow);
@@ -248,12 +252,14 @@ public class initSetup {
 		sub_menu.setVisibility(View.INVISIBLE);
 		gameStage.setVisibility(View.INVISIBLE);
 		leaderBoard.setVisibility(View.INVISIBLE);
+		howToPlay.setVisibility(View.INVISIBLE);
 		
 		slashScreen.setClickable(false);
 		mainMenu.setClickable(false);
 		sub_menu.setClickable(false);
 		gameStage.setClickable(false);
 		leaderBoard.setClickable(false);
+		howToPlay.setVisibility(View.INVISIBLE);
 		
 		thisStage.setVisibility(View.VISIBLE);
 		thisStage.setClickable(true);
@@ -352,8 +358,38 @@ public class initSetup {
 		            case MotionEvent.ACTION_UP:{
 		            	ic_continue_btn.setAlpha(255);
 		            	
-		            	gameEngine.startGameEngine((globalVariable.getLevel() + 1),sdk);
+		            	if(globalVariable.getLevel() == 0){
+			            	stageController(howToPlay);
+			            	objectsController.setStageBackground(howToPlay,"backgrounds/how_to_play.jpg");
+			            	globalVariable.curentStage = 3;
+		            	}else{
+			            	gameEngine.startGameEngine((globalVariable.getLevel() + 1),sdk);
+			            	
+			            	globalVariable.curentStage = 3;
+		            	}
 		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_how_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_how_btn.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_how_btn.setAlpha(255);
+		            	
+		            	stageController(howToPlay);
+		            	objectsController.setStageBackground(howToPlay,"backgrounds/how_to_play.jpg");
 		            	globalVariable.curentStage = 3;
 		            	
 		                break;
@@ -379,6 +415,56 @@ public class initSetup {
 		            	globalVariable.curentStage = 1;
 						stageController(mainMenu);
 						objectsController.setStageBackground(mainMenu,"backgrounds/main_menu.jpg");
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_howto_continue_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_howto_continue_btn.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_howto_continue_btn.setAlpha(255);
+		            	
+		            	gameEngine.startGameEngine((globalVariable.getLevel() + 1),sdk);
+		            	
+		            	globalVariable.curentStage = 3;
+		            	
+		                break;
+		            }
+	            }
+	            return true;
+	        }
+	    });
+	    
+	    ic_howto_menu_btn.setOnTouchListener(new View.OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View arg0, MotionEvent arg1) {
+	            switch (arg1.getAction()) {
+		            case MotionEvent.ACTION_DOWN: {
+		            	soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
+		            	ic_howto_menu_btn.setAlpha(180);
+		            	
+		                break;
+		            }
+		            case MotionEvent.ACTION_UP:{
+		            	ic_howto_menu_btn.setAlpha(255);
+		            	
+		            	stageController(sub_menu);
+		            	objectsController.setStageBackground(sub_menu,"backgrounds/sub_menu.jpg");
+		            	globalVariable.curentStage = 2;
+
+		            	objectsController.createLevelOptions(globalVariable.getLevel());
 		            	
 		                break;
 		            }
