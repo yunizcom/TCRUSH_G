@@ -22,7 +22,7 @@ Game mode : playing alone but recording your score with global friends.
 - share your score on Facebook Wall
 
 How to play :
-- wordings are droping down from the top, typing them to score the point before they disappeared.
+- wordings are dropping down from the top, typing them to score the point before they disappeared.
 - rush again the time that allocated on each level.
 - you need to overlap the targeted point in order to past the level.
 
