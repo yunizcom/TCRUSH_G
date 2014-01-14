@@ -104,11 +104,65 @@ public class gameEngine extends Activity {
 		gameStage = (RelativeLayout) myActivity.findViewById(R.id.gameStage);
 		gameObjects = (LinearLayout) myActivity.findViewById(R.id.gameObjects);
 		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
-		
+
 		initAllKeysPress();
 	}
 
+	private void setTimeBarGraphic(boolean style){
+
+		RelativeLayout.LayoutParams params;
+		
+		if(style == true){
+			float f_CD = globalVariable.countDowns;
+			float f_TCD = globalVariable.countTotalDowns;
+			int currentTimePercent = (int)(f_CD / f_TCD * 100);
+			float c_TBW = globalVariable.timerBarOriWidth;
+			int curWidthIs = (int)(c_TBW / 100 * currentTimePercent);
+			
+			params = new RelativeLayout.LayoutParams
+			          (curWidthIs,(int) LayoutParams.WRAP_CONTENT);
+			
+			params.setMargins(0, 0, (globalVariable.timerBarOriWidth - curWidthIs), 0);
+		}else{
+			params = new RelativeLayout.LayoutParams
+			          ((int) LayoutParams.WRAP_CONTENT,(int) LayoutParams.WRAP_CONTENT);
+		}
+		
+		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, ic_time_bar.getId());
+		params.addRule(RelativeLayout.BELOW, stageTimeShow.getId());
+		
+		ic_time_bar.setLayoutParams(params);
+		
+		if(style == false && globalVariable.timerBarOriWidth == 0){
+	    	globalVariable.timerBarOriWidth = ic_time_bar.getWidth();
+		}
+		
+	}
+	
+	public void gameActivity(boolean status){
+		if(globalVariable.inGameMode == false){
+			return;
+		}
+		
+		if(status == true){
+			globalVariable.stopCounter = false;
+			
+			setTimeBarGraphic(true);
+
+			setCountDownTimerBar(globalVariable.countDowns);
+			
+			timerCountDown();
+	    	timerObjectCreate();
+		}else{
+			//ic_time_bar.clearAnimation();
+			setTimeBarGraphic(true);
+			globalVariable.stopCounter = true;
+		}
+		
+	}
+	
 	public void startGameEngine(int level, int p_sdk){
+		setTimeBarGraphic(false);
 		gameObjects.removeAllViewsInLayout();
 		System.gc();
 		
@@ -147,6 +201,8 @@ public class gameEngine extends Activity {
     	globalVariable.currentTill = 0;
     	createGameObjects(globalVariable.curShownObject);
     	
+    	globalVariable.inGameMode = true;
+   	
     	globalVariable.stopCounter = false;
     	timerCountDown();
     	timerObjectCreate();
@@ -734,11 +790,14 @@ public class gameEngine extends Activity {
 	}
 	
 	public void stopGameStage(){
-		ic_time_bar.clearAnimation();
+		globalVariable.inGameMode = false;
+		//ic_time_bar.clearAnimation();
+		setTimeBarGraphic(true);
 		globalVariable.stopCounter = true;
 	}
 	
 	private void setCountDownTimerBar(int size){
+		/*// removed because no longer needed animation to animate the timebar
 		Animation animationScale = new ScaleAnimation(1, 0, 1, 1);
     	animationScale.setDuration((size + 2) * 1000);
 
@@ -747,6 +806,7 @@ public class gameEngine extends Activity {
 		animSet.addAnimation(animationScale);
 		
 		ic_time_bar.startAnimation(animSet);
+		*/
 	}
 	
 	private void timerCountDown(){
@@ -765,6 +825,8 @@ public class gameEngine extends Activity {
 	        	globalVariable.countDowns--;
       	
 	        	stageTimeShow.setText("Time : " + secToString(globalVariable.countDowns));
+	        	
+	        	setTimeBarGraphic(true);
 
         		if(globalVariable.countDowns > 0){
 	        		timerCountDown();

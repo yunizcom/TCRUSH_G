@@ -709,6 +709,14 @@ public class initSetup {
 		//-------load JSON
 	}
     
+	public void pauseGame(){
+		gameEngine.gameActivity(false);
+	}
+	
+	public void resumeGame(){
+		gameEngine.gameActivity(true);
+	}
+	
 	public void handleNativeBackAction(){
 		soundsController.shortSoundClip("sounds/buttons_clicked.mp3");
 
@@ -738,7 +746,7 @@ public class initSetup {
 				}
 				case 1 : {
 					globalVariable.curentStage = 0;
-					myActivity.finish();
+					//myActivity.finish();
 					
 					break;
 				}

@@ -69,13 +69,20 @@ public class TypingCrush extends Activity {
 	@Override
     public void onBackPressed()
     {
-		initSetup.handleNativeBackAction();
+		if(globalVariable.curentStage == 1){
+			System.gc();
+			//super.onBackPressed();
+			System.exit(0);
+			//finish();
+		}else{
+			initSetup.handleNativeBackAction();
+		}
     }
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+	
 		soundsController.destroyBgMusic();
 	}
 	
@@ -83,11 +90,15 @@ public class TypingCrush extends Activity {
 	protected void onPause() {
 		super.onPause();
 		
+		initSetup.pauseGame();
+		
 		soundsController.pauseBgMusic();
 	}
 	
 	protected void onResume() {
 		super.onResume();
+		
+		initSetup.resumeGame();
 		
 		soundsController.resumeBgMusic();
 	}

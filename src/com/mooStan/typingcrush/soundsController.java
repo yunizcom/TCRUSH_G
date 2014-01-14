@@ -23,24 +23,54 @@ public class soundsController {
 	
 	//-----------app activity life cycle handling---------------
 	public void destroyBgMusic(){
-		globalVariable.bgMusic.stop();
+		try {
+			globalVariable.bgMusic.stop();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.bgMusic.release();
 		//globalVariable.bgMusic = null;
-		 
-		globalVariable.shortMusic.stop();
+		
+		try {
+			globalVariable.shortMusic.stop();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.shortMusic.release();
 		//globalVariable.shortMusic = null;
-		 
-		globalVariable.objMusic.stop();
+		
+		try {
+			globalVariable.objMusic.stop();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.objMusic.release();
 		//globalVariable.objMusic = null;
 	}
 	
 	public void pauseBgMusic(){
-		if(globalVariable.bgMusic.isPlaying()){
-			globalVariable.bgMusic.pause();
+		try {
+			if(globalVariable.bgMusic.isPlaying()){
+				try {
+					globalVariable.bgMusic.pause();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		globalVariable.objMusic.setVolume(0.0f, 0.0f);
+		try {
+			globalVariable.objMusic.setVolume(0.0f, 0.0f);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.minimize = 1;
 	}
 	
@@ -55,17 +85,33 @@ public class soundsController {
 			e.printStackTrace();
 		}
 		
-		if(!globalVariable.bgMusic.isPlaying()){
-			globalVariable.bgMusic.start();
+		try {
+			if(!globalVariable.bgMusic.isPlaying()){
+				globalVariable.bgMusic.start();
+			}
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		globalVariable.objMusic.setVolume(1.0f, 1.0f);
+		try {
+			globalVariable.objMusic.setVolume(1.0f, 1.0f);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		globalVariable.minimize = 0;
 	}
 	//-----------app activity life cycle handling---------------
 	
 	public void playBgMusic(String filename, boolean looping){
-		globalVariable.bgMusic.reset();
+		try {
+			globalVariable.bgMusic.reset();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.bgMusic.release();
 		//globalVariable.bgMusic = null;
     	
@@ -117,7 +163,12 @@ public class soundsController {
 	}
 	
 	public void shortSoundClip(String filename){
-		globalVariable.shortMusic.reset();
+		try {
+			globalVariable.shortMusic.reset();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.shortMusic.release();
 		//globalVariable.shortMusic = null;
     	
@@ -165,7 +216,12 @@ public class soundsController {
 	}
 	
 	public void objSoundClip(String filename){
-		globalVariable.objMusic.reset();
+		try {
+			globalVariable.objMusic.reset();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		globalVariable.objMusic.release();
 		//globalVariable.objMusic = null;
 
