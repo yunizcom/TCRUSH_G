@@ -1,7 +1,11 @@
 package com.mooStan.typingcrush;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,6 +118,11 @@ public class gameEngine extends Activity {
 		
 		if(style == true){
 			float f_CD = globalVariable.countDowns;
+			
+			if(f_CD < 0){
+				f_CD = 0;
+			}
+			
 			float f_TCD = globalVariable.countTotalDowns;
 			int currentTimePercent = (int)(f_CD / f_TCD * 100);
 			float c_TBW = globalVariable.timerBarOriWidth;
@@ -180,8 +189,13 @@ public class gameEngine extends Activity {
 		
 		stageController(gameStage);
     	setStageBackground(gameStage,"backgrounds/sub_menu.jpg");
-
-    	generateLevelChallenge(currentLevel, (50 + currentLevel));
+    	
+    	if(currentLevel > 2){
+    		accessWordsLib(currentLevel,(70 + currentLevel));
+    	}else{
+    		generateLevelChallenge(currentLevel, (70 + currentLevel));
+    	}
+    	
     	setBonuses();
     	globalVariable.currentLevels = currentLevel;
     	globalVariable.currentToDelayed = (int)(currentLevel / 2);
@@ -960,6 +974,64 @@ public class gameEngine extends Activity {
 		    return;
 		}
 		
+	}
+	
+	private void accessWordsLib(int level, int totaOutput){
+		String rawList = null;
+		BufferedReader isr = null;
+		String[] wordsList = null;
+		
+		if(level < 3){
+			level = 3;
+		}
+
+		InputStream ims = null;
+		try {
+			ims = myActivity.getAssets().open("wordslib/textlib_" + level + ".txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		isr = new BufferedReader(new InputStreamReader(ims));
+		try {
+			rawList = isr.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rawList = rawList.substring(0, rawList.length() - 1);
+		wordsList = rawList.split(",");
+		
+		ArrayList<String> cards = new ArrayList<String>(), finals = new ArrayList<String>();
+		Collections.addAll(cards, wordsList);
+		Collections.shuffle(cards);
+
+		for(int i = 0; i < totaOutput; i++){
+			finals.add(cards.get(i));
+		}
+		
+		wordsList = finals.toArray(new String[finals.size()]);
+		
+		/*load into the curent level words challenge list*/
+		int increaseEmpty = 9;
+		globalVariable.currentLevelChallenge = new String[wordsList.length + increaseEmpty];
+		int untilIndex = 0;
+		for(int i=0;i<wordsList.length;i++){
+			globalVariable.currentLevelChallenge[i] = wordsList[i];
+			untilIndex++;
+		}
+		for(int i=untilIndex;i<=increaseEmpty;i++){
+			globalVariable.currentLevelChallenge[i] = "";
+		}
+		/*load into the curent level words challenge list*/
+		
+		/*rawList = "";
+		for(int i = 0; i < wordsList.length; i++){
+			rawList = rawList + wordsList[i] + ",";
+		}
+		
+	    Log.v("debug",wordsList.length + " - " + rawList);*/
 	}
 	
 	private void keyPressReceiver(String keycode){

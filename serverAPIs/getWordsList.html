@@ -1,0 +1,29 @@
+<html>
+
+<head>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+</head>
+
+<body>
+<textarea id="wordlists" style="width:100%;height:90%;"></textarea><br>
+<div id="totalCount"></div>
+
+<script>
+var totalWords = 15;
+/*word library api here http://developer.wordnik.com/docs.html#!/words/getRandomWords_get_3*/
+$.getJSON( "http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&maxCorpusCount=-1&minDictionaryCount=0&maxDictionaryCount=-1&minLength=" + totalWords + "&maxLength=" + totalWords + "&sortOrder=asc&limit=500&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5", function( data ) {
+	var items = [];
+	$.each( data, function( key, val ) {
+		var getCurWord = val['word'].replace(" ","");
+		getCurWord = getCurWord.toLowerCase();
+		getCurWord = getCurWord.replace(/[^a-zA-Z 0-9]+/g, '');
+		$('#wordlists').html( $('#wordlists').html() + getCurWord + ",");
+	});
+	$('#totalCount').html( data.length );
+});
+</script>
+
+</body>
+
+</html>
