@@ -274,109 +274,110 @@ containing a value of this type.
         public static final int ic_trophy_game_stage=0x7f020057;
     }
     public static final class id {
-        public static final int action_settings=0x7f040066;
-        public static final int boardPlate=0x7f040014;
-        public static final int com_facebook_login_activity_progress_bar=0x7f040053;
-        public static final int com_facebook_picker_activity_circle=0x7f040052;
-        public static final int com_facebook_picker_checkbox=0x7f040055;
-        public static final int com_facebook_picker_checkbox_stub=0x7f040059;
-        public static final int com_facebook_picker_divider=0x7f04005d;
-        public static final int com_facebook_picker_done_button=0x7f04005c;
-        public static final int com_facebook_picker_image=0x7f040056;
-        public static final int com_facebook_picker_list_section_header=0x7f04005a;
-        public static final int com_facebook_picker_list_view=0x7f040051;
-        public static final int com_facebook_picker_profile_pic_stub=0x7f040057;
-        public static final int com_facebook_picker_row_activity_circle=0x7f040054;
-        public static final int com_facebook_picker_search_text=0x7f040062;
-        public static final int com_facebook_picker_title=0x7f040058;
-        public static final int com_facebook_picker_title_bar=0x7f04005f;
-        public static final int com_facebook_picker_title_bar_stub=0x7f04005e;
-        public static final int com_facebook_picker_top_bar=0x7f04005b;
-        public static final int com_facebook_search_bar_view=0x7f040061;
-        public static final int com_facebook_usersettingsfragment_login_button=0x7f040065;
-        public static final int com_facebook_usersettingsfragment_logo_image=0x7f040063;
-        public static final int com_facebook_usersettingsfragment_profile_name=0x7f040064;
-        public static final int fb_fanpage_btn=0x7f040006;
-        public static final int gameObjects=0x7f04001b;
-        public static final int gameStage=0x7f04001a;
-        public static final int howToPlay=0x7f040010;
-        public static final int ic_continue_btn=0x7f04000c;
-        public static final int ic_fb_share=0x7f04004c;
-        public static final int ic_gomenu=0x7f040015;
-        public static final int ic_how_btn=0x7f04000f;
-        public static final int ic_howto_continue_btn=0x7f040011;
-        public static final int ic_howto_menu_btn=0x7f040012;
-        public static final int ic_invitefriends=0x7f040009;
-        public static final int ic_key_a=0x7f04002f;
-        public static final int ic_key_b=0x7f04003d;
-        public static final int ic_key_c=0x7f04003b;
-        public static final int ic_key_clr=0x7f040038;
-        public static final int ic_key_d=0x7f040031;
-        public static final int ic_key_del=0x7f040040;
-        public static final int ic_key_e=0x7f040027;
-        public static final int ic_key_f=0x7f040032;
-        public static final int ic_key_g=0x7f040033;
-        public static final int ic_key_h=0x7f040034;
-        public static final int ic_key_i=0x7f04002c;
-        public static final int ic_key_j=0x7f040035;
-        public static final int ic_key_k=0x7f040036;
-        public static final int ic_key_l=0x7f040037;
-        public static final int ic_key_m=0x7f04003f;
-        public static final int ic_key_n=0x7f04003e;
-        public static final int ic_key_o=0x7f04002d;
-        public static final int ic_key_p=0x7f04002e;
-        public static final int ic_key_q=0x7f040025;
-        public static final int ic_key_r=0x7f040028;
-        public static final int ic_key_s=0x7f040030;
-        public static final int ic_key_t=0x7f040029;
-        public static final int ic_key_u=0x7f04002b;
-        public static final int ic_key_v=0x7f04003c;
-        public static final int ic_key_w=0x7f040026;
-        public static final int ic_key_x=0x7f04003a;
-        public static final int ic_key_y=0x7f04002a;
-        public static final int ic_key_z=0x7f040039;
-        public static final int ic_mybomb=0x7f040022;
-        public static final int ic_mybomb_txt=0x7f040023;
-        public static final int ic_navi_left=0x7f040018;
-        public static final int ic_navi_right=0x7f040019;
-        public static final int ic_play_btn=0x7f040008;
-        public static final int ic_popbox_close=0x7f040050;
-        public static final int ic_popbox_egg=0x7f040048;
-        public static final int ic_submit_button=0x7f04004d;
-        public static final int ic_time_bar=0x7f040021;
-        public static final int ic_trophy_game_scores=0x7f040020;
-        public static final int ic_trophy_game_stage=0x7f04001f;
-        public static final int keyPadInputed=0x7f040024;
-        public static final int keypadBg=0x7f04001c;
+        public static final int action_settings=0x7f040067;
+        public static final int adView=0x7f040004;
+        public static final int boardPlate=0x7f040015;
+        public static final int com_facebook_login_activity_progress_bar=0x7f040054;
+        public static final int com_facebook_picker_activity_circle=0x7f040053;
+        public static final int com_facebook_picker_checkbox=0x7f040056;
+        public static final int com_facebook_picker_checkbox_stub=0x7f04005a;
+        public static final int com_facebook_picker_divider=0x7f04005e;
+        public static final int com_facebook_picker_done_button=0x7f04005d;
+        public static final int com_facebook_picker_image=0x7f040057;
+        public static final int com_facebook_picker_list_section_header=0x7f04005b;
+        public static final int com_facebook_picker_list_view=0x7f040052;
+        public static final int com_facebook_picker_profile_pic_stub=0x7f040058;
+        public static final int com_facebook_picker_row_activity_circle=0x7f040055;
+        public static final int com_facebook_picker_search_text=0x7f040063;
+        public static final int com_facebook_picker_title=0x7f040059;
+        public static final int com_facebook_picker_title_bar=0x7f040060;
+        public static final int com_facebook_picker_title_bar_stub=0x7f04005f;
+        public static final int com_facebook_picker_top_bar=0x7f04005c;
+        public static final int com_facebook_search_bar_view=0x7f040062;
+        public static final int com_facebook_usersettingsfragment_login_button=0x7f040066;
+        public static final int com_facebook_usersettingsfragment_logo_image=0x7f040064;
+        public static final int com_facebook_usersettingsfragment_profile_name=0x7f040065;
+        public static final int fb_fanpage_btn=0x7f040007;
+        public static final int gameObjects=0x7f04001c;
+        public static final int gameStage=0x7f04001b;
+        public static final int howToPlay=0x7f040011;
+        public static final int ic_continue_btn=0x7f04000d;
+        public static final int ic_fb_share=0x7f04004d;
+        public static final int ic_gomenu=0x7f040016;
+        public static final int ic_how_btn=0x7f040010;
+        public static final int ic_howto_continue_btn=0x7f040012;
+        public static final int ic_howto_menu_btn=0x7f040013;
+        public static final int ic_invitefriends=0x7f04000a;
+        public static final int ic_key_a=0x7f040030;
+        public static final int ic_key_b=0x7f04003e;
+        public static final int ic_key_c=0x7f04003c;
+        public static final int ic_key_clr=0x7f040039;
+        public static final int ic_key_d=0x7f040032;
+        public static final int ic_key_del=0x7f040041;
+        public static final int ic_key_e=0x7f040028;
+        public static final int ic_key_f=0x7f040033;
+        public static final int ic_key_g=0x7f040034;
+        public static final int ic_key_h=0x7f040035;
+        public static final int ic_key_i=0x7f04002d;
+        public static final int ic_key_j=0x7f040036;
+        public static final int ic_key_k=0x7f040037;
+        public static final int ic_key_l=0x7f040038;
+        public static final int ic_key_m=0x7f040040;
+        public static final int ic_key_n=0x7f04003f;
+        public static final int ic_key_o=0x7f04002e;
+        public static final int ic_key_p=0x7f04002f;
+        public static final int ic_key_q=0x7f040026;
+        public static final int ic_key_r=0x7f040029;
+        public static final int ic_key_s=0x7f040031;
+        public static final int ic_key_t=0x7f04002a;
+        public static final int ic_key_u=0x7f04002c;
+        public static final int ic_key_v=0x7f04003d;
+        public static final int ic_key_w=0x7f040027;
+        public static final int ic_key_x=0x7f04003b;
+        public static final int ic_key_y=0x7f04002b;
+        public static final int ic_key_z=0x7f04003a;
+        public static final int ic_mybomb=0x7f040023;
+        public static final int ic_mybomb_txt=0x7f040024;
+        public static final int ic_navi_left=0x7f040019;
+        public static final int ic_navi_right=0x7f04001a;
+        public static final int ic_play_btn=0x7f040009;
+        public static final int ic_popbox_close=0x7f040051;
+        public static final int ic_popbox_egg=0x7f040049;
+        public static final int ic_submit_button=0x7f04004e;
+        public static final int ic_time_bar=0x7f040022;
+        public static final int ic_trophy_game_scores=0x7f040021;
+        public static final int ic_trophy_game_stage=0x7f040020;
+        public static final int keyPadInputed=0x7f040025;
+        public static final int keypadBg=0x7f04001d;
         public static final int large=0x7f040002;
-        public static final int leaderBoard=0x7f040013;
-        public static final int leaderBoardList=0x7f040016;
-        public static final int level_list=0x7f04000e;
-        public static final int linearLayout1=0x7f04000b;
-        public static final int mainMenu=0x7f040005;
-        public static final int mynickName=0x7f04004b;
+        public static final int leaderBoard=0x7f040014;
+        public static final int leaderBoardList=0x7f040017;
+        public static final int level_list=0x7f04000f;
+        public static final int linearLayout1=0x7f04000c;
+        public static final int mainMenu=0x7f040006;
+        public static final int mynickName=0x7f04004c;
         public static final int myview=0x7f040003;
         public static final int normal=0x7f040001;
-        public static final int picker_subtitle=0x7f040060;
-        public static final int popbox=0x7f040041;
-        public static final int popboxCenter=0x7f040042;
-        public static final int popboxMSG=0x7f040043;
-        public static final int popboxOK_btn=0x7f040044;
-        public static final int popboxResult=0x7f040045;
-        public static final int popboxResultLvl=0x7f040047;
-        public static final int popboxResultLvl2=0x7f040046;
-        public static final int popboxResultPts=0x7f04004a;
-        public static final int popboxResultPts2=0x7f040049;
-        public static final int popbox_trophy=0x7f04004f;
-        public static final int scores_list=0x7f040017;
-        public static final int scrollList=0x7f04000d;
-        public static final int shareTips=0x7f04004e;
-        public static final int slashScreen=0x7f040004;
+        public static final int picker_subtitle=0x7f040061;
+        public static final int popbox=0x7f040042;
+        public static final int popboxCenter=0x7f040043;
+        public static final int popboxMSG=0x7f040044;
+        public static final int popboxOK_btn=0x7f040045;
+        public static final int popboxResult=0x7f040046;
+        public static final int popboxResultLvl=0x7f040048;
+        public static final int popboxResultLvl2=0x7f040047;
+        public static final int popboxResultPts=0x7f04004b;
+        public static final int popboxResultPts2=0x7f04004a;
+        public static final int popbox_trophy=0x7f040050;
+        public static final int scores_list=0x7f040018;
+        public static final int scrollList=0x7f04000e;
+        public static final int shareTips=0x7f04004f;
+        public static final int slashScreen=0x7f040005;
         public static final int small=0x7f040000;
-        public static final int stageLevelShow=0x7f04001d;
-        public static final int stageTimeShow=0x7f04001e;
-        public static final int sub_menu=0x7f04000a;
-        public static final int trophy_btn=0x7f040007;
+        public static final int stageLevelShow=0x7f04001e;
+        public static final int stageTimeShow=0x7f04001f;
+        public static final int sub_menu=0x7f04000b;
+        public static final int trophy_btn=0x7f040008;
     }
     public static final class layout {
         public static final int activity_typing_crush=0x7f030000;
@@ -394,6 +395,7 @@ containing a value of this type.
         public static final int com_facebook_placepickerfragment_list_row=0x7f03000c;
         public static final int com_facebook_search_bar_layout=0x7f03000d;
         public static final int com_facebook_usersettingsfragment=0x7f03000e;
+        public static final int main_menu=0x7f03000f;
     }
     public static final class menu {
         public static final int typing_crush=0x7f090000;
@@ -484,7 +486,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:multi_select
+          @attr name com.mooStan.typingcrush:multi_select
         */
         public static final int com_facebook_friend_picker_fragment_multi_select = 0;
         /** Attributes that can be used with a com_facebook_login_view.
@@ -517,7 +519,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:confirm_logout
+          @attr name com.mooStan.typingcrush:confirm_logout
         */
         public static final int com_facebook_login_view_confirm_logout = 0;
         /**
@@ -531,7 +533,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:fetch_user_info
+          @attr name com.mooStan.typingcrush:fetch_user_info
         */
         public static final int com_facebook_login_view_fetch_user_info = 1;
         /**
@@ -545,7 +547,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:login_text
+          @attr name com.mooStan.typingcrush:login_text
         */
         public static final int com_facebook_login_view_login_text = 2;
         /**
@@ -559,7 +561,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:logout_text
+          @attr name com.mooStan.typingcrush:logout_text
         */
         public static final int com_facebook_login_view_logout_text = 3;
         /** Attributes that can be used with a com_facebook_picker_fragment.
@@ -595,7 +597,7 @@ containing a value of this type.
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:done_button_background
+          @attr name com.mooStan.typingcrush:done_button_background
         */
         public static final int com_facebook_picker_fragment_done_button_background = 6;
         /**
@@ -609,7 +611,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:done_button_text
+          @attr name com.mooStan.typingcrush:done_button_text
         */
         public static final int com_facebook_picker_fragment_done_button_text = 4;
         /**
@@ -623,7 +625,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:extra_fields
+          @attr name com.mooStan.typingcrush:extra_fields
         */
         public static final int com_facebook_picker_fragment_extra_fields = 1;
         /**
@@ -637,7 +639,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:show_pictures
+          @attr name com.mooStan.typingcrush:show_pictures
         */
         public static final int com_facebook_picker_fragment_show_pictures = 0;
         /**
@@ -651,7 +653,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:show_title_bar
+          @attr name com.mooStan.typingcrush:show_title_bar
         */
         public static final int com_facebook_picker_fragment_show_title_bar = 2;
         /**
@@ -661,7 +663,7 @@ containing a value of this type.
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name android:title_bar_background
+          @attr name com.mooStan.typingcrush:title_bar_background
         */
         public static final int com_facebook_picker_fragment_title_bar_background = 5;
         /**
@@ -675,7 +677,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:title_text
+          @attr name com.mooStan.typingcrush:title_text
         */
         public static final int com_facebook_picker_fragment_title_text = 3;
         /** Attributes that can be used with a com_facebook_place_picker_fragment.
@@ -708,7 +710,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:radius_in_meters
+          @attr name com.mooStan.typingcrush:radius_in_meters
         */
         public static final int com_facebook_place_picker_fragment_radius_in_meters = 0;
         /**
@@ -722,7 +724,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:results_limit
+          @attr name com.mooStan.typingcrush:results_limit
         */
         public static final int com_facebook_place_picker_fragment_results_limit = 1;
         /**
@@ -736,7 +738,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:search_text
+          @attr name com.mooStan.typingcrush:search_text
         */
         public static final int com_facebook_place_picker_fragment_search_text = 2;
         /**
@@ -750,7 +752,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:show_search_box
+          @attr name com.mooStan.typingcrush:show_search_box
         */
         public static final int com_facebook_place_picker_fragment_show_search_box = 3;
         /** Attributes that can be used with a com_facebook_profile_picture_view.
@@ -779,7 +781,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:is_cropped
+          @attr name com.mooStan.typingcrush:is_cropped
         */
         public static final int com_facebook_profile_picture_view_is_cropped = 1;
         /**
@@ -797,7 +799,7 @@ containing a value of this type.
 <tr><td><code>normal</code></td><td>-3</td><td></td></tr>
 <tr><td><code>large</code></td><td>-4</td><td></td></tr>
 </table>
-          @attr name android:preset_size
+          @attr name com.mooStan.typingcrush:preset_size
         */
         public static final int com_facebook_profile_picture_view_preset_size = 0;
     };

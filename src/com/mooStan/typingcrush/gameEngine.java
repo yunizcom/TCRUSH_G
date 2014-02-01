@@ -34,6 +34,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.mooStan.typingcrush.soundsController;
+import com.revmob.RevMob;
+import com.revmob.RevMobTestingMode;
 
 public class gameEngine extends Activity {
 
@@ -54,6 +56,8 @@ public class gameEngine extends Activity {
 	
 	private String[] lettersLib = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
 
+	private RevMob revmob;
+	
 	gameEngine(Context context, Activity myActivityReference) {
 		myContext = context;
 		myActivity = myActivityReference;
@@ -110,6 +114,11 @@ public class gameEngine extends Activity {
 		leaderBoard = (RelativeLayout) myActivity.findViewById(R.id.leaderBoard);
 
 		initAllKeysPress();
+		
+		/*----RevMob Ads----*/
+		revmob = RevMob.start(myActivity);
+//revmob.setTestingMode(RevMobTestingMode.WITH_ADS);
+        /*----RevMob Ads----*/
 	}
 
 	private void setTimeBarGraphic(boolean style){
@@ -801,6 +810,8 @@ public class gameEngine extends Activity {
 			popupBox.showPopBox("",1);
 		}
 
+		revmob.showFullscreen(myActivity);
+		
 	}
 	
 	public void stopGameStage(){

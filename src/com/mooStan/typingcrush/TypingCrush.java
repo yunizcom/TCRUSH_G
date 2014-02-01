@@ -2,13 +2,18 @@ package com.mooStan.typingcrush;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.app.Activity;
 import android.content.Intent;
 
 import com.facebook.Session;
+import com.mooStan.typingcrush.R;
 import com.mooStan.typingcrush.initSetup;
 import com.mooStan.typingcrush.soundsController;
+import com.revmob.RevMob;
+import com.revmob.RevMobTestingMode;
+import com.revmob.ads.banner.RevMobBanner;
 
 public class TypingCrush extends Activity {
 
@@ -16,6 +21,8 @@ public class TypingCrush extends Activity {
 	public soundsController soundsController;
 
 	private GlobalVars globalVariable;
+	
+	private RevMob revmob;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +56,22 @@ public class TypingCrush extends Activity {
 		    Log.e("exception", e.toString());
 		}
 		 */
+		
+		/*----RevMob Ads----*/
+		revmob = RevMob.start(this);
+//revmob.setTestingMode(RevMobTestingMode.WITH_ADS);
+		revmob.showFullscreen(this);
+        /*----RevMob Ads----*/
+		
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
-	    Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	    
+	    if(data != null){
+	    	Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	    }
 	}
 	
 	@Override
